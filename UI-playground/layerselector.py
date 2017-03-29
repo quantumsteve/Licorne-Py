@@ -43,7 +43,7 @@ class layerselector(QtWidgets.QWidget):
                 print('Adding ',i)
         else:
             print("add empty layer")
-            #self.listmodel.append
+            self.listmodel.addItem(Layer())
      
     def delClicked(self):
         inds=sorted([s.row() for s in self.listview.selectionModel().selectedRows()])
@@ -60,6 +60,11 @@ class layerselector(QtWidgets.QWidget):
             print(data[i]) 
 
 class MyListModel(QtCore.QAbstractListModel):
+    itemAboutToBeAdded = QtCore.pyqtSignal(Layer)
+    itemAboutToBeRemoved = QtCore.pyqtSignal(Layer)
+    itemAdded = QtCore.pyqtSignal(Layer)
+    itemRemoved = QtCore.pyqtSignal(Layer)
+
     def __init__(self, datain, parent=None, *args):
         QtCore.QAbstractTableModel.__init__(self, parent, *args)
         self.arraydata = datain
@@ -74,6 +79,13 @@ class MyListModel(QtCore.QAbstractListModel):
         elif role != QtCore.Qt.DisplayRole:
             return QtCore.QVariant()
         return QtCore.QVariant(indexdata[index.row()])
+
+    def addItem(self,item):
+        self.itemAboutToBeAdded.emit(item)
+        self.beginInsertRows(QtCore.QModelIndex(), 0, 0)
+        self.arraydata.insert(0, item)
+        self.endInsertRows()
+        self.itemAdded.emit(item)
 
 
 
