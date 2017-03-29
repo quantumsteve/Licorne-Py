@@ -1,39 +1,36 @@
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 from layer import Layer, MSLD
 
 try:
-    from PyQt4.QtCore import QString
+    from PyQt5.QtCore import QString
 except ImportError:
     QString = type("")
 
 
-class layerselector(QtGui.QWidget):
+class layerselector(QtWidgets.QWidget):
     def __init__(self, sample,*args):
-        QtGui.QWidget.__init__(self, *args)
+        QtWidgets.QWidget.__init__(self, *args)
         self.sample=sample
         self.listmodel = MyListModel(self.sample, self)
-        self.listview = QtGui.QListView()
+        self.listview = QtWidgets.QListView()
         self.listview.setModel(self.listmodel)
-        self.listview.setSelectionMode(QtGui.QListView.ExtendedSelection)
-        QtCore.QObject.connect(self.listview.selectionModel(), QtCore.SIGNAL('selectionChanged(QItemSelection, QItemSelection)'), self.selChanged)
-        #selectionModel = listview.selectionModel()
-        #selectionModel.selectionChanged.connect(self.selChanged)
-        layout = QtGui.QVBoxLayout(self)
+        self.listview.setSelectionMode(QtWidgets.QListView.MultiSelection)
+        self.listview.selectionModel().selectionChanged.connect(self.selChanged)
+        layout = QtWidgets.QVBoxLayout(self)
         layout.addWidget(self.listview)
-        add_button = QtGui.QPushButton("+")
-        QtCore.QObject.connect(add_button, QtCore.SIGNAL('clicked()'),self.addClicked)
-        del_button = QtGui.QPushButton("-")
-        QtCore.QObject.connect(del_button, QtCore.SIGNAL('clicked()'),self.delClicked)
-        prn_button = QtGui.QPushButton("Print")
-        QtCore.QObject.connect(prn_button, QtCore.SIGNAL('clicked()'),self.prnClicked)
+        add_button = QtWidgets.QPushButton("+")
+        add_button.clicked.connect(self.addClicked)
+        del_button = QtWidgets.QPushButton("-")
+        del_button.clicked.connect(self.delClicked)
+        prn_button = QtWidgets.QPushButton("Print")
+        prn_button.clicked.connect(self.prnClicked)
         layout.addWidget(add_button)
         layout.addWidget(del_button)
         layout.addWidget(prn_button)
         self.setLayout(layout)
         
-    @QtCore.pyqtSlot("QItemSelection, QItemSelection")   
     def selChanged(self,selected,deselected):
         inds=sorted([s.row() for s in self.listview.selectionModel().selectedRows()])
         for i in inds:
@@ -46,6 +43,7 @@ class layerselector(QtGui.QWidget):
                 print('Adding ',i)
         else:
             print("add empty layer")
+            #self.listmodel.append
      
     def delClicked(self):
         inds=sorted([s.row() for s in self.listview.selectionModel().selectedRows()])
@@ -80,7 +78,7 @@ class MyListModel(QtCore.QAbstractListModel):
 
 
 if __name__=='__main__':
-    app=QtGui.QApplication(sys.argv)
+    app=QtWidgets.QApplication(sys.argv)
     mainForm=layerselector([Layer(),Layer(thickness=2.),Layer(nsld=2.)])
     mainForm.show()
     sys.exit(app.exec_())
