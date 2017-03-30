@@ -1,0 +1,26 @@
+branches:
+  only:
+  - master
+
+environment:
+  matrix:
+    - PYTHON_VERSION: 2.7
+      MINICONDA: C:\Miniconda-x64
+    - PYTHON_VERSION: 3.6
+      MINICONDA: C:\Miniconda35-x64
+
+init:
+  - ECHO %PYTHON_VERSION% %MINICONDA%
+  - set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda info -a
+
+install:
+  - conda create -q -n testenv python=%PYTHON_VERSION% pyqt
+  - activate testenv
+
+build: off
+
+test_script:
+  - python -m unittest tests
