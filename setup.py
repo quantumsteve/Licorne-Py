@@ -9,5 +9,5 @@ setup(
     author_email='hahnse@ornl.gov, saviciat@ornl.gov',
     url='https://github.com/neutrons/licorne-py',
     license='GPLv3+',
-    packages=['licrone']
+    packages=['licorne']
 )
