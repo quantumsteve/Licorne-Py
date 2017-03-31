@@ -1,14 +1,8 @@
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 import sys
 import numpy as np
 from layer import Layer, MSLD
-
-try:
-    from PyQt5.QtCore import QString
-except ImportError:
-    QString = type("")
-
 
 class layerselector(QtWidgets.QWidget):
     def __init__(self, sample,*args):
@@ -32,20 +26,18 @@ class layerselector(QtWidgets.QWidget):
         self.setLayout(layout)
         
     def selChanged(self,selected,deselected):
-        inds=sorted([s.row() for s in self.listview.selectionModel().selectedRows()])
-        newly_selected=sorted([s.row() for s in selected.indexes()])
-        print(inds)
-        #print(newly_selected)
-        substrate_index=len(self.listmodel.arraydata)-1
-        if (substrate_index in inds) and len(inds)>1:
-            print('substrate selected')
-            self.listview.blockSignals(True)
-            if substrate_index in newly_selected:
-                print('newly selected substrate')
+        substrate_index=self.listmodel.index(len(self.listmodel.arraydata)-1)
+        all_rows=self.listview.selectionModel().selectedRows()
+        if (substrate_index in all_rows) and len(all_rows)>1:
+            if substrate_index in selected:
+                if len(selected)>1:
+                    self.listview.selectionModel().select(substrate_index,QtCore.QItemSelectionModel.Deselect)
+                else:
+                    self.listview.selectionModel().clear()
+                    self.listview.selectionModel().select(substrate_index,QtCore.QItemSelectionModel.Select)
             else:
-                print('previously selected substrate') 
-            self.listview.blockSignals(False)
-    
+                self.listview.selectionModel().select(substrate_index,QtCore.QItemSelectionModel.Deselect) 
+
     def addClicked(self):
         inds=sorted([s.row() for s in self.listview.selectionModel().selectedRows()])
         if inds:
@@ -58,7 +50,7 @@ class layerselector(QtWidgets.QWidget):
         else:
             print("add empty layer")
             self.listmodel.addItem(Layer())
-     
+
     def delClicked(self):
         inds=sorted([s.row() for s in self.listview.selectionModel().selectedRows()], reverse=True)
         if inds:
@@ -75,7 +67,7 @@ class layerselector(QtWidgets.QWidget):
         data = self.listmodel.arraydata
         for i,l in enumerate(data):
             print('Layer {0}'.format(i))
-            print(data[i])
+            print(l)
 
 
 class MyListModel(QtCore.QAbstractListModel):
