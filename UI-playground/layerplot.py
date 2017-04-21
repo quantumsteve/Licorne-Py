@@ -15,7 +15,7 @@ class layerplot(QtWidgets.QWidget):
     def __init__(self, *args):
         QtWidgets.QWidget.__init__(self, *args)
         sample=[Layer(nsld=5),Layer(thickness=2.,nsld=3),Layer(nsld=5),Layer(nsld=4.,thickness=np.inf)]
-        self.m = PlotCanvas(sample, self, width=5, height=4)
+        self.m = PlotCanvas(sample, self)
         self.m.move(0,0)
  
     def resizeEvent(self, event):
@@ -24,8 +24,8 @@ class layerplot(QtWidgets.QWidget):
 
 class PlotCanvas(FigureCanvas):
 
-    def __init__(self, layers, parent=None, width=10, height=5, dpi=200):
-        self.fig = Figure(figsize=(width, height), dpi=dpi)
+    def __init__(self, layers, parent=None):
+        self.fig = Figure()
         self.axes = self.fig.add_subplot(111)
         FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)

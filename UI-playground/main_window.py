@@ -1,8 +1,5 @@
-from PyQt5 import QtCore, QtWidgets, uic
+from PyQt5 import QtWidgets, uic
 import sys
-import layerselector2,layerselector,layerplot
-from layer import Layer, MSLD
-import numpy as np
 
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType('ui/mainWindow.ui')
