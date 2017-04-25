@@ -20,7 +20,7 @@ class SMat:
     def __len__(self):
         return len(self.M11)
 
-def s_moment(A, inc_moment2)
+def s_moment(A, inc_moment2):
     T = inc_moment2 - A
     return np.sqrt(T)
 
@@ -90,8 +90,8 @@ def mult_nm(A, B):
 
 def s_invmoment(A, inc_moment2):
     T = inc_moment2 - A
-    T.sqrt()
-    T.reciprocal()
+    T = np.sqrt(T)
+    T = np.reciprocal(T)
     return T
 
 def p_moment(A, B1, B2, B3, inc_moment2):
@@ -158,7 +158,7 @@ def mult_vm(A, B):
     Out.twoone = A * B.twoone
     Out.twotwo = A * B.twotwo
 
-def inv(A)
+def inv(A):
     Out = Mat(len(A))
     D = A.oneone * A.twotwo - A.onetwo * A.twone
     Out.oneone = A.twotwo / D
@@ -166,8 +166,6 @@ def inv(A)
     Out.twoone = -1.0 * A.twoone / D
     Out.twotwo = A.oneone / D
     return Out
-
-
 
 def reflection(inc_moment, parl, sub):
     inc_moment2 = np.square(inc_moment)
