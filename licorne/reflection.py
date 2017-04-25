@@ -167,7 +167,7 @@ def inv(A)
     Out.twotwo = A.oneone / D
     return Out
 
-def reflection(R, inc_moment, parl, sub):
+def reflection(inc_moment, parl, sub):
     inc_moment2 = np.square(inc_moment)
     T = inc_moment2 - 4.0 * np.pi * sub
     sub_moment = np.sqrt(T)
