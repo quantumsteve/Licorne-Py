@@ -167,6 +167,8 @@ def inv(A)
     Out.twotwo = A.oneone / D
     return Out
 
+
+
 def reflection(inc_moment, parl, sub):
     inc_moment2 = np.square(inc_moment)
     T = inc_moment2 - 4.0 * np.pi * sub
@@ -176,9 +178,6 @@ def reflection(inc_moment, parl, sub):
     S.M11.twotwo.fill(1.0)
     S.M22.oneone.fill(1.0)
     S.M22.twotwo.fill(1.0)
-
-    psize = len(parl)
-
     for cur_layer in parl:
         A = 4.0 * np.pi * cur_layer.nsld
         th = cur_layer.thickness
@@ -200,11 +199,28 @@ def reflection(inc_moment, parl, sub):
     Up11 = mult_vm(complex(0.0,-1.0) * sub_moment, S.M11)
     Up12 = np.copy(Down12)
     Up21 = np.copy(S.M21)
-    Up 22 = np.copy(Down22)
+    Up22 = np.copy(Down22)
     R = mult_mm(D_1, plus_mm(plus_mm(plus_mm(Up11, Up12), Up21), Up22))
     return R
 
+def spin_av(R, n1, n2, pol_eff, an_eff):
+    I = complex(0.0, 1.0)
+    Spin_dens1 = Mat(len(pol_eff))
+    Spin_dens1.oneone = 1.0 + n1[2] * pol_eff
+    Spin_dens1.onetwo = (n1[0] - I * n1[1]) * pol_eff
+    Spin_dens1.twoone = (n1[0] + I * n1[1]) * pol_eff
+    Spin_dens1.twotwo = 1.0 - n1[2] * pol_eff
+    Spin_dens2 = Mat(len(an_eff))
+    Spin_dens2.oneone = 1.0 + n2[2] * an_eff
+    Spin_dens2.onetwo = (n2[0] - I * n2[1]) * an_eff
+    Spin_dens2.twoone = (n2[0] + I * n2[1]) * an_eff
+    Spin_dens2.twotwo = 1.0 - n2[2] * an_eff
 
-
-
-
+    Rch = Mat(len(R))
+    Rch.oneone = np.conj(R.oneone)
+    Rch.twotwo = np.conj(R.twotwo)
+    Rch.onetwo = np.conj(R.twoone)
+    Rch.twoone = np.conj(R.onetwo)
+    RRt = mult_mm(Spin_dens1, mult_mm(Rch, mult_mm(Spin_dens2, R)))
+    Out = (RRt.oneone + RRt.twotwo) / 4.0
+    return Out
