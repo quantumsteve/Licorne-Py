@@ -17,7 +17,7 @@ init:
   - conda info -a
 
 install:
-  - conda create -q -n testenv python=%PYTHON_VERSION% pyqt
+  - conda create -q -n testenv python=%PYTHON_VERSION% numpy pyqt
   - activate testenv
 
 build: off
