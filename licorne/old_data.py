@@ -1,27 +1,17 @@
 import reflection
 import numpy as np
 
-class SMat:
-    def __init__(self, size):
-        self.M11 = Mat(size)
-        self.M12 = Mat(size)
-        self.M21 = Mat(size)
-        self.M22 = Mat(size)
-
-    def __len__(self):
-        return len(self.M11)
-
 class Layer:
     pass
 
 paramfile = open('refl_par.dat','r')
 n_monte_carlo = int(paramfile.readline())
 formalism = int(paramfile.readline())
-res_mode = paramfile.readline()
+res_mode = int(paramfile.readline())
 n_of_outputs = int(paramfile.readline())
 
-pol_vecs = np.array([float(value) for value in paramfile.readline().split()]).reshape(6,3)
-an_vecs = np.array([float(value) for value in paramfile.readline().split()]).reshape(6,3)
+pol_vecs = np.array([float(value) for value in paramfile.readline().strip().split()]).reshape(6,3)
+an_vecs = np.array([float(value) for value in paramfile.readline().strip().split()]).reshape(6,3)
 
 pol_fun = [int(value) for value in paramfile.readline().split()]
 
