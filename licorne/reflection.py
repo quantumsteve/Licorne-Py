@@ -1,3 +1,4 @@
+from copy import deepcopy
 import numpy as np
 
 class Mat:
@@ -46,7 +47,7 @@ def p_cos(A, B1, B2, B3, th, inc_moment2):
         Out.twotwo = F_plus - B3 * F_minus
     else:
         T = s_cos(A, th, inc_moment2)
-        Out.oneone = T
+        Out.oneone = np.copy(T)
         Out.onetwo.fill(0.0)
         Out.twoone.fill(0.0)
         Out.twotwo = T
@@ -66,7 +67,7 @@ def p_sin(A, B1, B2, B3, th, inc_moment2):
         Out.twotwo = F_plus - B3 * F_minus
     else:
         T = s_sin(A, th, inc_moment2)
-        Out.oneone = T
+        Out.oneone = np.copy(T)
         Out.onetwo.fill(0.0)
         Out.twoone.fill(0.0)
         Out.twotwo = T
@@ -108,7 +109,7 @@ def p_moment(A, B1, B2, B3, inc_moment2):
         Out.twotwo = F_plus - B3 * F_minus
     else:
         T = s_moment(A, inc_moment2)
-        Out.oneone = T
+        Out.oneone = np.copy(T)
         Out.onetwo.fill(0.0)
         Out.twoone.fill(0.0)
         Out.twotwo = T
@@ -128,7 +129,7 @@ def p_invmoment(A, B1, B2, B3, inc_moment2):
         Out.twotwo = F_plus - B3 * F_minus
     else:
         T = s_invmoment(A, inc_moment2)
-        Out.oneone = T
+        Out.oneone = np.copy(T)
         Out.onetwo.fill(0.0)
         Out.twoone.fill(0.0)
         Out.twotwo = T
@@ -157,10 +158,11 @@ def mult_vm(A, B):
     Out.onetwo = A * B.onetwo
     Out.twoone = A * B.twoone
     Out.twotwo = A * B.twotwo
+    return Out
 
 def inv(A):
     Out = Mat(len(A))
-    D = A.oneone * A.twotwo - A.onetwo * A.twone
+    D = A.oneone * A.twotwo - A.onetwo * A.twoone
     Out.oneone = A.twotwo / D
     Out.onetwo = -1.0 * A.onetwo / D
     Out.twoone = -1.0 * A.twoone / D
@@ -187,7 +189,7 @@ def reflection(inc_moment, parl, sub):
         Msin = p_sin(A, B1, B2, B3, th, inc_moment2)
         M.M12 = mult_mm(p_invmoment(A, B1, B2, B3, inc_moment2), Msin)
         M.M21 = mult_mm(mult_nm(complex(-1.0,0.0), p_moment(A, B1, B2, B3, inc_moment2)), Msin)
-        M.M22 = np.copy(M.M11)
+        M.M22 = deepcopy(M.M11)
         S = mult_s(M, S)
     Down11 = mult_vm(complex(0.0,1.0) * sub_moment, S.M11)
     Down12 = mult_vm(inc_moment * sub_moment, S.M12)
@@ -195,9 +197,9 @@ def reflection(inc_moment, parl, sub):
     Down22 = mult_vm(complex(0.0,1.0)*inc_moment, S.M22)
     D_1 = inv(plus_mm(plus_mm(plus_mm(Down11, Down12), Down21), Down22))
     Up11 = mult_vm(complex(0.0,-1.0) * sub_moment, S.M11)
-    Up12 = np.copy(Down12)
-    Up21 = np.copy(S.M21)
-    Up22 = np.copy(Down22)
+    Up12 = deepcopy(Down12)
+    Up21 = deepcopy(S.M21)
+    Up22 = deepcopy(Down22)
     R = mult_mm(D_1, plus_mm(plus_mm(plus_mm(Up11, Up12), Up21), Up22))
     return R
 
