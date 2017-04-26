@@ -1,14 +1,14 @@
-import unittest
 from licorne import reflection
 import numpy as np
+import os
+import unittest
 
 class Layer:
     pass
 
-
 class TestReflectionClass(unittest.TestCase):
     def test_reference_results(self):
-        paramfile = open('data/refl_par.dat','r')
+        paramfile = open(os.path.join(os.path.dirname(__file__),'data/refl_par.dat'),'r')
         n_monte_carlo = int(paramfile.readline())
         formalism = int(paramfile.readline())
         res_mode = int(paramfile.readline())
@@ -39,7 +39,7 @@ class TestReflectionClass(unittest.TestCase):
 
         q = []
         dq = []
-        with open('data/refl_q_dq.dat','r') as qfile:
+        with open(os.path.join(os.path.dirname(__file__),'data/refl_q_dq.dat'),'r') as qfile:
             for line in qfile:
                 tmp = [float(value) for value in line.split()]
                 q.append(tmp[0])
@@ -58,7 +58,7 @@ class TestReflectionClass(unittest.TestCase):
             RRr = RRr * norm_factor[k] + background
 
             reference_values = []
-            with open('data/refl'+str(k+1)+'.dat', 'r') as reflfile:
+            with open(os.path.join(os.path.dirname(__file__),'data/refl'+str(k+1)+'.dat'), 'r') as reflfile:
                 for line in reflfile:
                     reference_values.append(float(line))
             reflfile.close()
