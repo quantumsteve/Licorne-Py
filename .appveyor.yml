@@ -23,4 +23,4 @@ install:
 build: off
 
 test_script:
-  - python -m unittest tests
+  - python -m unittest discover tests
