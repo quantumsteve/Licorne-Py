@@ -1,9 +1,9 @@
 from __future__ import absolute_import, division
 
 import pytest
-from tests.data.load import loaddata
-import licorne.model as model
-from licorne.resolution import Resolution
+from data.load import loaddata
+import model as model
+from resolution import Resolution
 import numpy as np
 import re
 import mantid.simpleapi as smtdi
