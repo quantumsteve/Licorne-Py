@@ -1,5 +1,6 @@
 from licorne import reflection
 import numpy as np
+from numpy.testing import assert_array_almost_equal
 import os
 import unittest
 
@@ -37,17 +38,9 @@ class TestReflectionClass(unittest.TestCase):
 
         paramfile.close()
 
-        q = []
-        dq = []
-        with open(os.path.join(os.path.dirname(__file__),'data/refl_q_dq.dat'),'r') as qfile:
-            for line in qfile:
-                tmp = [float(value) for value in line.split()]
-                q.append(tmp[0])
-                dq.append(tmp[1])
-        qfile.close()
-        q = np.array(q)
-        dq = np.array(dq)
+        q, dq = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/refl_q_dq.dat'),unpack=True)
         inc_moment = q / 2.0
+
         pol_eff = np.ones(len(q), dtype=np.complex128)
         an_eff = np.ones(len(q), dtype=np.complex128)
 
@@ -57,15 +50,8 @@ class TestReflectionClass(unittest.TestCase):
             RRr = reflection.resolut(RR, q, dq)
             RRr = RRr * norm_factor[k] + background
 
-            reference_values = []
-            with open(os.path.join(os.path.dirname(__file__),'data/refl'+str(k+1)+'.dat'), 'r') as reflfile:
-                for line in reflfile:
-                    reference_values.append(float(line))
-            reflfile.close()
-
-            self.assertEqual(len(reference_values),len(RRr))
-            for value, reference in zip(RRr, reference_values):
-                self.assertAlmostEqual(value,reference)
+            reference_values = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/refl'+str(k+1)+'.dat'), unpack=True)
+            assert_array_almost_equal(reference_values, RRr)
 
 if __name__ == '__main__':
     unittest.main()
