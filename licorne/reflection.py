@@ -1,7 +1,7 @@
 from copy import deepcopy
 import numpy as np
 
-class Mat:
+class Mat(object):
     def __init__(self, size):
         self.oneone = np.zeros(size, dtype=np.complex128)
         self.onetwo = np.zeros(size, dtype=np.complex128)
@@ -11,7 +11,7 @@ class Mat:
     def __len__(self):
         return len(self.oneone)
 
-class SMat:
+class SMat(object):
     def __init__(self, size):
         self.M11 = Mat(size)
         self.M12 = Mat(size)
@@ -227,7 +227,6 @@ def spin_av(R, n1, n2, pol_eff, an_eff):
 def resolut(RR, q, dq):
     N = len(q)
     Nm1 = N - 1
-    denominator = np.zeros(N)
     RRr = np.zeros(N)
     pi_s = np.sqrt(2.0 * np.pi)
 

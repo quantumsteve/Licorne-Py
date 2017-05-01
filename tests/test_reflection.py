@@ -4,7 +4,7 @@ from numpy.testing import assert_array_almost_equal
 import os
 import unittest
 
-class Layer:
+class Layer(object):
     pass
 
 class TestReflectionClass(unittest.TestCase):
