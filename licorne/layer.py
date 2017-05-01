@@ -1,11 +1,45 @@
-from collections import namedtuple, Iterable
-
-NumericPar=namedtuple('NumericPar',['value','minimum','maximum'])
-NumericPar.__new__.__defaults__=(0.,None,None)
+from NumericParameter import NumericParameter, to_iterable
+import operator
 
 
-# Magnetic scattering length density
-MSLD=namedtuple('MSLD',['rho','theta','phi'])
+class MSLD(object):
+    """
+    Class that stores information about the magnetic scattering length density
+    """
+    def __init__(self,rho=0.,theta=0., phi=0.):
+        '''
+        Parameters
+        ----------
+        rho : float
+        theta : float
+        phi : float
+            The polar components of the magnetic density vector
+        '''
+        self.rho=rho
+        self.theta=theta
+        self.phi=phi
+
+    def __repr__(self):
+        s="msld:"
+        for x in (self.rho, self.theta, self.phi):
+            s+='\n  '+x.__repr__()
+        return s
+
+    rho = property(operator.attrgetter('_rho'))
+    @rho.setter
+    def rho(self,r):
+        self._rho = NumericParameter('rho',*to_iterable(r))
+
+    theta = property(operator.attrgetter('_theta'))
+    @theta.setter
+    def theta(self,t):
+        self._theta = NumericParameter('theta',t)
+
+    phi = property(operator.attrgetter('_phi'))
+    @phi.setter
+    def phi(self,p):
+        self._phi = NumericParameter('phi',p)
+
 
 class Layer(object):
     """
@@ -19,7 +53,7 @@ class Layer(object):
                  msld_theta=0.,
                  msld_phi=0.,
                  roughness=0.,
-                 rougness_model='tanh',
+                 roughness_model='tanh',
                  name=None):
         """
         Create a layer with the following parameters:
@@ -37,33 +71,57 @@ class Layer(object):
         To input the value, minimum and maximum, you should enter a 
         triplet (list,set, numpy array, etc)
         """
-        self.thickness=self._to_NumericPar(thickness)
-        self.nsld=self._to_NumericPar(nsld)
-        self.nsldi=self._to_NumericPar(nsldi)    
-        self.msld=MSLD(self._to_NumericPar(msld_rho),
-                       self._to_NumericPar(msld_theta),
-                       self._to_NumericPar(msld_phi))
-        self.roughness=self._to_NumericPar(roughness)
-        self.rougness_model=rougness_model
-        if self.rougness_model not in ['erf', 'tanh', 'NC']:
-            self.rougness_model=None
+        self.thickness=thickness
+        self.nsld=nsld
+        self.nsldi=nsldi
+        self.msld=(msld_rho,msld_theta, msld_phi)
+        self.roughness=roughness
+        self.roughness_model=roughness_model
+        if self.roughness_model not in ['erf', 'tanh', 'NC']:
+            self.roughness_model=None
         self.name=name
 
-    def _to_NumericPar(self, value):
-        """
-        Check if value can be converted to a NumericPar
-        """
-        if isinstance(value, Iterable):
-            if len(value)<4:
-                return_value=NumericPar(*value)
-            else:
-                raise ValueError("{0} cannot be converted to (value, min, max)".format(value))
+    def __repr__(self):
+        s=[]
+        s.append("name: {0}".format(self.name))
+        for x in [self.nsld,self.nsldi,self.msld, self.roughness]:
+            s.append(x.__repr__())
+        s.append("roughness_model: {0}".format(self.roughness_model))
+        return '\n '.join(s)
+
+    name = property(operator.attrgetter('_name'))
+    @name.setter
+    def name(self,n):
+        if n is not None:
+            self._name = str(n)
         else:
-            return_value=NumericPar(value)
-        #The code below will raise ValueError if no floats
-        return_value.value=float(return_value.value)
-        if return_value.minimum!=None:
-            return_value.minimum=float(return_value.minimum)
-        if return_value.maximum!=None:
-            return_value.maximum=float(return_value.maximum)
-        return return_value     
+            self._name = ''
+
+    nsld = property(operator.attrgetter('_nsld'))
+    @nsld.setter
+    def nsld(self,v):
+        self._nsld = NumericParameter('nsld',v)
+
+    nsldi = property(operator.attrgetter('_nsldi'))
+    @nsldi.setter
+    def nsldi(self,v):
+        self._nsldi = NumericParameter('nsldi',v)
+
+
+    msld = property(operator.attrgetter('_msld'))
+    @msld.setter
+    def msld(self,v):
+        self._msld = MSLD(v)
+
+    roughness = property(operator.attrgetter('_roughness'))
+    @roughness.setter
+    def roughness(self,v):
+        self._roughness = NumericParameter('roughness',v)
+
+    roughness_model = property(operator.attrgetter('_roughness_model'))
+    @roughness_model.setter
+    def roughness_model(self,v):
+        if v in ['erf', 'tanh', 'NC']:
+            self._roughness_model = v
+        else:
+            self._roughness_model = None
