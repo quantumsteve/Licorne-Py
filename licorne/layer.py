@@ -1,5 +1,6 @@
 from NumericParameter import NumericParameter, to_iterable
 import operator
+import numpy as np
 
 
 class MSLD(object):
@@ -47,7 +48,7 @@ class Layer(object):
     for a single layer
     """
     def __init__(self,thickness=0.,
-                 nsld=0.,
+                 nsldr=0.,
                  nsldi=0.,
                  msld_rho=0.,
                  msld_theta=0.,
@@ -58,7 +59,7 @@ class Layer(object):
         """
         Create a layer with the following parameters:
         - thickness: thickness
-        - nsld: nuclear scattering length density (real part)
+        - nsldr: nuclear scattering length density (real part)
         - nsldi: nuclear scattering length density (imaginary part)
         - msld_rho: magnetic scattering length density magnitude
         - msld_theta: magnetic scattering length density magnitude
@@ -72,7 +73,7 @@ class Layer(object):
         triplet (list,set, numpy array, etc)
         """
         self.thickness=thickness
-        self.nsld=nsld
+        self.nsldr=nsldr
         self.nsldi=nsldi
         self.msld=(msld_rho,msld_theta, msld_phi)
         self.roughness=roughness
@@ -84,7 +85,7 @@ class Layer(object):
     def __repr__(self):
         s=[]
         s.append("name: {0}".format(self.name))
-        for x in [self.nsld,self.nsldi,self.msld, self.roughness]:
+        for x in [self.nsldr,self.nsldi,self.msld, self.roughness]:
             s.append(x.__repr__())
         s.append("roughness_model: {0}".format(self.roughness_model))
         return '\n '.join(s)
@@ -97,16 +98,24 @@ class Layer(object):
         else:
             self._name = ''
 
-    nsld = property(operator.attrgetter('_nsld'))
-    @nsld.setter
-    def nsld(self,v):
-        self._nsld = NumericParameter('nsld',v)
+    nsldr = property(operator.attrgetter('_nsldr'))
+    @nsldr.setter
+    def nsldr(self,v):
+        self._nsldr = NumericParameter('nsldr',v)
 
     nsldi = property(operator.attrgetter('_nsldi'))
     @nsldi.setter
     def nsldi(self,v):
         self._nsldi = NumericParameter('nsldi',v)
 
+    @property
+    def nsld(self):
+        return np.complex(self.nsldr.value,self.nsldi.value)
+    @nsld.setter
+    def nsld(self,v):
+        v=np.complex(*to_iterable(v,dtype=np.complex))
+        self.nsldr.value=v.real
+        self.nsldi.value=v.imag
 
     msld = property(operator.attrgetter('_msld'))
     @msld.setter

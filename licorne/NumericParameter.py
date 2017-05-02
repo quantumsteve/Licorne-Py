@@ -2,13 +2,13 @@ import numpy as np
 import operator
 from collections import Iterable
 
-def to_iterable(val):
+def to_iterable(val,dtype=np.float):
     if isinstance(val,str):
-        return [np.float(x) for x in val.split(',')]
+        return [dtype(x) for x in val.split(',')]
     elif isinstance(val,Iterable):
-        return val
+        return [dtype(x) for x in val]
     else:
-        return [np.float(val)]
+        return [dtype(val)]
 
 class NumericParameter(object):
     """
