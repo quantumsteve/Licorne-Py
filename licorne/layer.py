@@ -1,4 +1,4 @@
-from NumericParameter import NumericParameter, to_iterable
+from .NumericParameter import NumericParameter, to_iterable
 import operator
 import numpy as np
 from enum import Enum
@@ -90,7 +90,7 @@ class Layer(object):
     def __repr__(self):
         s=[]
         s.append("name: {0}".format(self.name))
-        for x in [self.nsld_real,self.nsld_imaginary,self.msld, self.roughness]:
+        for x in [self.thickness,self.nsld_real,self.nsld_imaginary,self.msld, self.roughness]:
             s.append(x.__repr__())
         s.append("roughness_model: {0}".format(self.roughness_model))
         return '\n '.join(s)
