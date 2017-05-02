@@ -1,6 +1,13 @@
 from NumericParameter import NumericParameter, to_iterable
 import operator
 import numpy as np
+from enum import Enum
+
+class RoughnessModel(Enum):
+    NONE=1
+    ERFC=2
+    TANH=3
+    NEVOT_CROCE=4
 
 
 class MSLD(object):
@@ -48,24 +55,24 @@ class Layer(object):
     for a single layer
     """
     def __init__(self,thickness=0.,
-                 nsldr=0.,
-                 nsldi=0.,
+                 nsld_real=0.,
+                 nsld_imaginary=0.,
                  msld_rho=0.,
                  msld_theta=0.,
                  msld_phi=0.,
                  roughness=0.,
-                 roughness_model='tanh',
+                 roughness_model=RoughnessModel.NONE,
                  name=None):
         """
         Create a layer with the following parameters:
         - thickness: thickness
-        - nsldr: nuclear scattering length density (real part)
-        - nsldi: nuclear scattering length density (imaginary part)
+        - nsld_real: nuclear scattering length density (real part)
+        - nsld_imaginary: nuclear scattering length density (imaginary part)
         - msld_rho: magnetic scattering length density magnitude
         - msld_theta: magnetic scattering length density magnitude
         - msld_phi: magnetic scattering length density magnitude
         - roughness: roughness
-        - roughess_model: model for the roughness, one of [None, 'erf', 'tanh', 'NC']
+        - roughess_model: model for the roughness, one of RoughnessModel types
         - name: an optional string to use as the name of the layer
         Numerical parameters have minimum/maximum values that are going
         to be used for fitting. To input just the value, just enter a single number.
@@ -73,19 +80,17 @@ class Layer(object):
         triplet (list,set, numpy array, etc)
         """
         self.thickness=thickness
-        self.nsldr=nsldr
-        self.nsldi=nsldi
+        self.nsld_real=nsld_real
+        self.nsld_imaginary=nsld_imaginary
         self.msld=(msld_rho,msld_theta, msld_phi)
         self.roughness=roughness
         self.roughness_model=roughness_model
-        if self.roughness_model not in ['erf', 'tanh', 'NC']:
-            self.roughness_model=None
         self.name=name
 
     def __repr__(self):
         s=[]
         s.append("name: {0}".format(self.name))
-        for x in [self.nsldr,self.nsldi,self.msld, self.roughness]:
+        for x in [self.nsld_real,self.nsld_imaginary,self.msld, self.roughness]:
             s.append(x.__repr__())
         s.append("roughness_model: {0}".format(self.roughness_model))
         return '\n '.join(s)
@@ -98,24 +103,24 @@ class Layer(object):
         else:
             self._name = ''
 
-    nsldr = property(operator.attrgetter('_nsldr'))
-    @nsldr.setter
-    def nsldr(self,v):
-        self._nsldr = NumericParameter('nsldr',v)
+    nsld_real = property(operator.attrgetter('_nsld_real'))
+    @nsld_real.setter
+    def nsld_real(self,v):
+        self._nsld_real = NumericParameter('nsld_real',v)
 
-    nsldi = property(operator.attrgetter('_nsldi'))
-    @nsldi.setter
-    def nsldi(self,v):
-        self._nsldi = NumericParameter('nsldi',v)
+    nsld_imaginary = property(operator.attrgetter('_nsld_imaginary'))
+    @nsld_imaginary.setter
+    def nsld_imaginary(self,v):
+        self._nsld_imaginary = NumericParameter('nsld_imaginary',v)
 
     @property
     def nsld(self):
-        return np.complex(self.nsldr.value,self.nsldi.value)
+        return np.complex(self.nsld_real.value,self.nsld_imaginary.value)
     @nsld.setter
     def nsld(self,v):
         v=np.complex(*to_iterable(v,dtype=np.complex))
-        self.nsldr.value=v.real
-        self.nsldi.value=v.imag
+        self.nsld_real.value=v.real
+        self.nsld_imaginary.value=v.imag
 
     msld = property(operator.attrgetter('_msld'))
     @msld.setter
@@ -130,7 +135,7 @@ class Layer(object):
     roughness_model = property(operator.attrgetter('_roughness_model'))
     @roughness_model.setter
     def roughness_model(self,v):
-        if v in ['erf', 'tanh', 'NC']:
-            self._roughness_model = v
-        else:
-            self._roughness_model = None
+        if not isinstance(v,RoughnessModel):
+            raise ValueError('roughness_model is not the corect type')
+        self._roughness_model = v
+
