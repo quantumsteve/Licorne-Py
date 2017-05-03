@@ -1,6 +1,22 @@
 from PyQt5 import QtCore
 from .layer import Layer #RoughnessModel,MSLD
 import numpy as np
+from six import Iterator
+
+class SampleModelIterator(Iterator):
+    '''
+    Implements an iterator over the SampleModel.layers
+    '''
+    def __init__(self,SampleModelInstance):
+        self.SampleModelInstance=SampleModelInstance
+        self.index=0
+    def __next__(self):
+        try:
+            result=self.SampleModelInstance.layers[self.index]
+        except IndexError:
+            raise StopIteration
+        self.index += 1
+        return result
 
 class SampleModel(QtCore.QAbstractListModel):
     '''
@@ -64,20 +80,9 @@ class SampleModel(QtCore.QAbstractListModel):
             del self.layers[position]
             self.endRemoveRows()
 
-    #functions to iterate over the layers, no substrate
+    #iterate over the layers, no substrate
     def __iter__(self):
-        self.index=0
-        return self
-
-    def __next__(self):
-        try:
-            result=self.layers[self.index]
-        except IndexError:
-            raise StopIteration
-        self.index += 1
-        return result
-
-    next = __next__ #python2
+        return SampleModelIterator(self)
 
     def move_down_1(self,selected_indices):
         '''
