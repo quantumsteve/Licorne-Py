@@ -17,7 +17,8 @@ init:
   - conda info -a
 
 install:
-  - conda create -q -n testenv python=%PYTHON_VERSION% numpy pyqt
+  - if "%PYTHON_VERSION%"=="2.7" ( conda create -q -n testenv python=%PYTHON_VERSION% numpy pyqt enum34 )
+  - if "%PYTHON_VERSION%"=="3.6" ( conda create -q -n testenv python=%PYTHON_VERSION% numpy pyqt )
   - activate testenv
 
 build: off

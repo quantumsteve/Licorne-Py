@@ -26,7 +26,11 @@ install:
   - conda info -a
 
   # Replace dep1 dep2 ... with your dependencies
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy pyqt
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy pyqt enum34;
+    else
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy pyqt;
+    fi
   - source activate test-environment
   - python setup.py install
 
