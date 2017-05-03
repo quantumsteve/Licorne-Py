@@ -77,6 +77,7 @@ class SampleModel(QtCore.QAbstractListModel):
         self.index += 1
         return result
 
+    next = __next__ #python2
 
     def move_down_1(self,selected_indices):
         '''
