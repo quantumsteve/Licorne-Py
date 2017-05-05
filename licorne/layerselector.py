@@ -14,54 +14,64 @@ class layerselector(QtWidgets.QWidget, Ui_layerselector):
         self.sample_model.setParent(self)
         self.listView.setModel(self.sample_model)
         self.listView.selectionModel().selectionChanged.connect(self.selectionChanged)
-        self.invalidSelection[str].connect(self.select_label.setText)
+        self.invalidSelection[str].connect(self.module_logger)
+
+    def module_logger(self,message):
+        print('[layerselector]: '+message)
 
     def addClicked(self):
-        pass
-        '''
-        inds=sorted([s.row() for s in self.listview.selectionModel().selectedRows()])
+        selected=self.listView.selectionModel().selectedRows()
+        inds=sorted([s.row() for s in selected])
         if inds:
             for i in inds:
-                if i!= len(self.listmodel.arraydata)-1:
-                    print('Adding ',i)
-                    self.listmodel.addItem(self.listmodel.arraydata[i])
+                if inds in [[0],[self.sample_model.rowCount()-1]]:
+                    self.invalidSelection.emit('Cannot add another substrate or incoming media')
                 else:
-                    print('Cannot add substrate')
+                    self.sample_model.addItem(self.sample_model.layers[i-1])
         else:
-            print("add empty layer")
-            self.listmodel.addItem(Layer())
-        '''
+            self.sample_model.addItem(layer.Layer())
+        self.listView.selectionModel().clear()
+        for selection in selected:
+            self.listView.selectionModel().select(selection,QtCore.QItemSelectionModel.Select)         
+
     def delClicked(self):
         inds=sorted([s.row() for s in self.listView.selectionModel().selectedRows()], reverse=True)
         if inds:
             if inds in [[0],[self.sample_model.rowCount()-1]]:
-                print('Cannot delete substrate or incoming media')
+                self.invalidSelection.emit('Cannot delete substrate or incoming media')
             else:
                 for i in inds:
                     self.sample_model.delItem(i-1)
         else:
-            print("nothing selected")
+            self.invalidSelection.emit("nothing selected")
             
     def selectionEntered(self):
         selection_string=str(self.select_lineEdit.text())
-        selection_string_parts=selection_string.split(',')
-        selection_slices=[]
-        for part in selection_string_parts:
-            slice_parts=[part.split(':')
-            if len(slice_parts)>3:
-                self.invalidSelection.emit(part+" has more than three arguments")
+        slice_parts=selection_string.split(':')
+        if len(slice_parts)>3:
+            self.invalidSelection.emit(selection_string+" has more than three arguments")
+            return
+        if len(slice_parts)==1:
+            try:
+                index=int(slice_parts[0])
+                selection_slice=slice(index,index+1)
+            except ValueError:
+                self.invalidSelection.emit(selection_string+' cannot be converted to a slice')
                 return
-                
-            else:
-                try:
-                    slice_temp=[int(x) if x.strip()!='' else None for x in slice_parts]
-                    if slice_temp[1] is None and slice_temp[2] is none
-                    selection_slices.append(s)
-                except ValueError:
-                    self.invalidSelection.emit(part+' cannot be converted to a slice')
-                    return
+        else:
+            try:
+                s=[int(x) if x.strip()!='' else None for x in slice_parts]
+                selection_slice=slice(*s)
+            except ValueError:
+                self.invalidSelection.emit(selection_string+' cannot be converted to a slice')
+                return
         self.listView.selectionModel().clear()
-        
+        all_layers=range(1,self.sample_model.rowCount()-1)
+        new_selection=all_layers[selection_slice]
+        for i in new_selection:
+            layer_index=self.sample_model.index(i)
+            self.listView.selectionModel().select(layer_index,QtCore.QItemSelectionModel.Select)
+
         
     def selectionChanged(self,selected,deselected):
         incoming_media_index=self.sample_model.index(0)
@@ -90,10 +100,10 @@ class layerselector(QtWidgets.QWidget, Ui_layerselector):
 if __name__=='__main__':
     app = QtWidgets.QApplication(sys.argv)
     sm=SampleModel.SampleModel()
-    sm.addItem(layer.Layer(name='0'))
-    sm.addItem(layer.Layer(name='1'))
-    sm.addItem(layer.Layer(name='2'))
-    sm.addItem(layer.Layer(name='3'))
+    sm.addItem(layer.Layer(name='L0'))
+    sm.addItem(layer.Layer(name='L1',thickness=2))
+    sm.addItem(layer.Layer(name='L2'))
+    sm.addItem(layer.Layer(name='L3'))
     window = layerselector(sm)
     window.show()
     sys.exit(app.exec_())
