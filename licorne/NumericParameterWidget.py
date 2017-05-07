@@ -5,19 +5,21 @@ import numpy as np
 from collections import Iterable
 
 
-Ui_NumericParameter, QtBaseClass = uic.loadUiType('UI/NumericParameterInput.ui')
+Ui_NumericParameter, QtBaseClass = uic.loadUiType('UI/NumericParameterWidget.ui')
 
 class NumericParameterWidget(QtWidgets.QWidget, Ui_NumericParameter):
-    def __init__(self,parameter=None,available_ties=None,*args):
+    def __init__(self,*args,parameter=None,available_ties=None):
         QtWidgets.QWidget.__init__(self,*args)
         Ui_NumericParameter.__init__(self)
         self.setupUi(self)
         self.parameter=parameter
         self.available_ties=available_ties
-        if parameter is not None:
+        print("parameter:",self.parameter)
+        if self.parameter is not None:
             self.updateUiFromParameter(parameter,available_ties)
 
     def updateUiFromParameter(self,parameter,available_ties):
+        print(parameter)
         self.ties_comboBox.addItem('')
         if isinstance(available_ties,str):
             self.ties_comboBox.addItem(available_ties)
@@ -36,7 +38,7 @@ class NumericParameterWidget(QtWidgets.QWidget, Ui_NumericParameter):
             self.ties_comboBox.setCurrentIndex(tie_index)
             if parameter.vary:
                 self.fit_radioButton.setChecked(True)
-                self.add_current_tie(self,parameter,available_ties)
+                self.add_current_tie(parameter,available_ties)
             else:
                 self.fixed_radioButton.setChecked(True)
             if parameter.minimum==-np.inf:
@@ -74,6 +76,6 @@ if __name__=='__main__':
     par1=NumericParameter.NumericParameter(name='par1',value=3,maximum=7,vary=True,expr='other value1')
     par2=NumericParameter.NumericParameter(name='par2',value=3,maximum=7,vary=True)
     par3=NumericParameter.NumericParameter(name='par3',value=3,vary=False)
-    window = NumericParameterWidget([par1,par2,par3],['other value','different value'])
+    window = NumericParameterWidget(parameter=[par1,par2,par3],available_ties=['other value','different value'])
     window.show()
     sys.exit(app.exec_())

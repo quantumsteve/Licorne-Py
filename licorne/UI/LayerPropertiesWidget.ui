@@ -7,61 +7,59 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>391</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>10</y>
-     <width>241</width>
-     <height>27</height>
+     <x>10</x>
+     <y>100</y>
+     <width>371</width>
+     <height>261</height>
     </rect>
    </property>
+   <property name="title">
+    <string>Thickness</string>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="NumericParameterWidget" name="Thickness_widget" native="true"/>
+    </item>
+   </layout>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="Name_label">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>111</x>
      <y>10</y>
-     <width>91</width>
-     <height>20</height>
+     <width>79</width>
+     <height>17</height>
     </rect>
    </property>
    <property name="text">
     <string>Layer name</string>
    </property>
   </widget>
-  <widget class="NumericParameterInput" name="widget" native="true">
+  <widget class="QLineEdit" name="Name_lineEdit">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>80</y>
-     <width>341</width>
-     <height>80</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QWidget" name="widget_2" native="true">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>200</y>
-     <width>341</width>
-     <height>80</height>
+     <x>111</x>
+     <y>33</y>
+     <width>142</width>
+     <height>25</height>
     </rect>
    </property>
   </widget>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>NumericParameterInput</class>
+   <class>NumericParameterWidget</class>
    <extends>QWidget</extends>
-   <header location="global">numericparameterinput.h</header>
+   <header location="global">NumericParameterWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
