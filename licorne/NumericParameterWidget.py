@@ -14,7 +14,6 @@ class NumericParameterWidget(QtWidgets.QWidget, Ui_NumericParameter):
         self.setupUi(self)
         self.parameter=parameter
         self.available_ties=available_ties
-        print("parameter:",self.parameter)
         if self.parameter is not None:
             self.updateUiFromParameter(parameter,available_ties)
 
