@@ -9,13 +9,13 @@ class SampleModelIterator(Iterator):
     '''
     def __init__(self,SampleModelInstance):
         self.SampleModelInstance=SampleModelInstance
-        self.index=0
+        self._index=0
     def __next__(self):
         try:
-            result=self.SampleModelInstance.layers[self.index]
+            result=self.SampleModelInstance.layers[self._index]
         except IndexError:
             raise StopIteration
-        self.index += 1
+        self._index += 1
         return result
 
 class SampleModel(QtCore.QAbstractListModel):
@@ -31,7 +31,6 @@ class SampleModel(QtCore.QAbstractListModel):
         self.incoming_media=Layer(name='incoming media',thickness=np.inf)
         self.substrate=Layer(name='substrate',thickness=np.inf)
         self.layers = []
-        self.index=0
 
     def rowCount(self, parent=None):
         '''

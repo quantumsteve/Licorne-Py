@@ -103,6 +103,11 @@ class Layer(object):
         else:
             self._name = ''
 
+    thickness = property(operator.attrgetter('_thickness'))
+    @thickness.setter
+    def thickness(self,v):
+        self._thickness = NumericParameter('thickness',v)
+
     nsld_real = property(operator.attrgetter('_nsld_real'))
     @nsld_real.setter
     def nsld_real(self,v):

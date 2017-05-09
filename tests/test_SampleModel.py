@@ -33,7 +33,7 @@ class TestSampleModelClass(unittest.TestCase):
         expected_names=['0', '1', '2', '3']
         self.assertEqual([s.name for s in sm],expected_names)
         expected_thickness=[0,0,3.14,0]
-        self.assertEqual([s.thickness for s in sm],expected_thickness)
+        self.assertEqual([s.thickness.value for s in sm],expected_thickness)
         for i,layer in enumerate(sm):
             layer.nsld=3*i+4j
         for i in range(4):
