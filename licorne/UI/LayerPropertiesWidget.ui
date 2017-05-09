@@ -33,7 +33,7 @@
    <item row="2" column="0">
     <widget class="QTabWidget" name="other_tabWidget">
      <property name="currentIndex">
-      <number>5</number>
+      <number>0</number>
      </property>
      <widget class="NumericParameterWidget" name="NSLDR">
       <attribute name="title">

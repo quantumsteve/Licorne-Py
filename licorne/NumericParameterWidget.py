@@ -8,26 +8,26 @@ from collections import Iterable
 Ui_NumericParameter, QtBaseClass = uic.loadUiType('UI/NumericParameterWidget.ui')
 
 class NumericParameterWidget(QtWidgets.QWidget, Ui_NumericParameter):
-    def __init__(self,*args,parameter=None,available_ties=None):
+    def __init__(self,*args,parameter=None,available_ties=None,prefix=''):
         QtWidgets.QWidget.__init__(self,*args)
         Ui_NumericParameter.__init__(self)
         self.setupUi(self)
         self.parameter=parameter
         self.available_ties=available_ties
+        self.prefix=prefix
         if self.parameter is not None:
-            self.updateUiFromParameter(parameter,available_ties)
+            self.updateUiFromParameter(self.parameter,self.available_ties,self.prefix)
 
-    def updateUiFromParameter(self,parameter,available_ties):
-        print(parameter)
-        self.ties_comboBox.addItem('')
-        if isinstance(available_ties,str):
-            self.ties_comboBox.addItem(available_ties)
-        elif isinstance(available_ties,Iterable):
-            for ties in available_ties:
-                self.ties_comboBox.addItem(ties)
-        else:
-            pass #None case or some weird input
+    def updateUiFromParameter(self,parameter,available_ties=None,prefix=''):
         if isinstance(parameter,NumericParameter.NumericParameter):
+            self.ties_comboBox.addItem('')
+            if isinstance(available_ties,str):
+                self.ties_comboBox.addItem(available_ties)
+            elif isinstance(available_ties,Iterable):
+                for ties in available_ties:
+                    self.ties_comboBox.addItem(ties)
+            else:
+                pass #None case or some weird input
             self.value_lineEdit.setText(str(parameter.value))
             self.unchanged_radioButton.setEnabled(False)
             try:
@@ -37,7 +37,7 @@ class NumericParameterWidget(QtWidgets.QWidget, Ui_NumericParameter):
             self.ties_comboBox.setCurrentIndex(tie_index)
             if parameter.vary:
                 self.fit_radioButton.setChecked(True)
-                self.add_current_tie(parameter,available_ties)
+                self.add_current_tie(prefix+parameter.name,available_ties)
             else:
                 self.fixed_radioButton.setChecked(True)
             if parameter.minimum==-np.inf:
@@ -49,7 +49,7 @@ class NumericParameterWidget(QtWidgets.QWidget, Ui_NumericParameter):
             else:
                 self.maximum_lineEdit.setText(str(parameter.maximum))
         else:
-            self.updateUiFromParameter(parameter[0],available_ties)
+            self.updateUiFromParameter(parameter[0],available_ties,prefix)
             self.ties_comboBox.insertItem(1,'Mixed/Unchanged')
             if len(set((p.expr for p in parameter)))!=1:
                 self.ties_comboBox.setCurrentIndex(1)
@@ -57,16 +57,13 @@ class NumericParameterWidget(QtWidgets.QWidget, Ui_NumericParameter):
                 self.value_lineEdit.setText(str(parameter[0].value)+' multiple')
             if len(set((p.vary for p in parameter)))!=1:
                 self.unchanged_radioButton.setChecked(True)
+                self.unchanged_radioButton.setEnabled(True)
             if len(set((p.minimum for p in parameter)))!=1:
                 self.minimum_lineEdit.setText(str(parameter[0].minimum)+' multiple')
             if len(set((p.maximum for p in parameter)))!=1:
                 self.maximum_lineEdit.setText(str(parameter[0].maximum)+' multiple')
         
-    def add_current_tie(self,parameter,available_ties):
-        '''
-        parameter : NumericParameter (cannot be Iterable)
-        '''
-        name=parameter.name
+    def add_current_tie(self,name,available_ties):
         if self.fit_radioButton.isChecked() and self.ties_comboBox.findText(name)==-1:
             self.ties_comboBox.addItem(name)
 
