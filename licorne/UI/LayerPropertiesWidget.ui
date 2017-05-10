@@ -16,7 +16,7 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
     <widget class="QTabWidget" name="thickness_tabWidget">
-     <widget class="NumericParameterWidget" name="Thickness_widget">
+     <widget class="NumericParameterWidget" name="Thickness">
       <attribute name="title">
        <string>Thickness</string>
       </attribute>
@@ -146,5 +146,25 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>other_tabWidget</sender>
+   <signal>currentChanged(int)</signal>
+   <receiver>Form</receiver>
+   <slot>show_hide_roughness_extras()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>401</x>
+     <y>258</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>360</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>show_hide_roughness_extras()</slot>
+ </slots>
 </ui>

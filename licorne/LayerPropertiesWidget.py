@@ -29,7 +29,7 @@ class LayerPropertiesWidget(QtWidgets.QWidget, Ui_LayerProperties):
         self.layer_list=newlist
         self.selection=[]
         self.ties_nsld_real, self.ties_nsld_imaginary, self.ties_msld_rho, \
-            self.ties_msld_theta, self.ties_msld_phi, self.ties_roughness=\
+            self.ties_msld_theta, self.ties_msld_phi, self.ties_roughness, self.ties_thickness=\
                 LayerList.generate_available_ties(self.layer_list[1:-1],self.layer_list[0],self.layer_list[-1])
 
     def set_selection(self,selected):
@@ -49,7 +49,12 @@ class LayerPropertiesWidget(QtWidgets.QWidget, Ui_LayerProperties):
         self.Roughness.updateUiFromParameter([self.layer_list[x].roughness for x in self.selection],self.ties_roughness,prefix)
         self.Thickness.updateUiFromParameter([self.layer_list[x].thickness for x in self.selection],self.ties_thickness,prefix)
         #TODO: rougness model and sublayers
-        #TODO: name
+        #TODO: name setPlaceholderText(QString)
+
+    def show_hide_roughness_extras(self,selected_tab):
+        if selected_tab==5: #roughness tab selected
+            self.horizontalLayout_2.hide()
+        
 
 if __name__=='__main__':
     app = QtWidgets.QApplication(sys.argv)

@@ -7,6 +7,7 @@ def generate_available_ties(layer_list,incoming_media, substrate):
     ties_msld_theta=[]
     ties_msld_phi=[]
     ties_roughness=[]
+    ties_thickness=[]
     for i,l in enumerate(layer_list):
         if l.nsld_real.vary and l.nsld_real.expr=='':
             ties_nsld_real.append("Layer{0}.nsld_real".format(i))
@@ -20,7 +21,8 @@ def generate_available_ties(layer_list,incoming_media, substrate):
             ties_msld_phi.append("Layer{0}.msld_phi".format(i))
         if l.roughness.vary and l.roughness.expr=='':
             ties_roughness.append("Layer{0}.roughness".format(i))
-
+        if l.thickness.vary and l.thickness.expr=='':
+            ties_thickness.append("Layer{0}.thickness".format(i))
     if incoming_media.nsld_real.vary and incoming_media.nsld_real.expr=='':
         ties_nsld_real.append("Incoming_Media.nsld_real")
     if incoming_media.nsld_imaginary.vary and incoming_media.nsld_imaginary.expr=='':
@@ -33,7 +35,8 @@ def generate_available_ties(layer_list,incoming_media, substrate):
         ties_msld_phi.append("Incoming_Media.msld_phi")
     if incoming_media.roughness.vary and incoming_media.roughness.expr=='':
         ties_roughness.append("Incoming_Media.roughness")
-
+    if incoming_media.thickness.vary and incoming_media.thickness.expr=='':
+        ties_thickness.append("Incoming_Media.thickness")
     if substrate.nsld_real.vary and substrate.nsld_real.expr=='':
         ties_nsld_real.append("Substrate.nsld_real")
     if substrate.nsld_imaginary.vary and substrate.nsld_imaginary.expr=='':
@@ -46,8 +49,10 @@ def generate_available_ties(layer_list,incoming_media, substrate):
         ties_msld_phi.append("Substrate.msld_phi")
     if substrate.roughness.vary and substrate.roughness.expr=='':
         ties_roughness.append("Substrate.roughness")
-
-    return (ties_nsld_real, ties_nsld_imaginary, ties_msld_rho, ties_msld_theta, ties_msld_phi, ties_roughness)
+    if substrate.thickness.vary and substrate.thickness.expr=='':
+        ties_thickness.append("Substrate.thickness")
+    return (ties_nsld_real, ties_nsld_imaginary, ties_msld_rho, \
+            ties_msld_theta, ties_msld_phi, ties_roughness,ties_thickness)
 
 
 def generate_parameter_lists(layer_list,incoming_media, substrate):
