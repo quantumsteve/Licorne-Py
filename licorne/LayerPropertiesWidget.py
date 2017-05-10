@@ -20,10 +20,12 @@ class LayerPropertiesWidget(QtWidgets.QWidget, Ui_LayerProperties):
         self.ties_msld_theta=[]
         self.ties_msld_phi=[]
         self.ties_roughness=[]
-        if layer is not None:
+        self.show_hide_roughness_extras(0)
+        if isinstance(layers,list):
             self.set_layer_list(layers)
             if selected is not None:
                 self.set_selection(selected)
+        self.Name_lineEdit.setFocus()
 
     def set_layer_list(self,newlist):
         self.layer_list=newlist
@@ -34,12 +36,25 @@ class LayerPropertiesWidget(QtWidgets.QWidget, Ui_LayerProperties):
 
     def set_selection(self,selected):
         self.selection=selected
+        if self.selection==[]:
+            return #TODO: clear input
+        name=self.layer_list[np.min(self.selection)].name
+        if len(self.selection)>1 and name!='':
+            name+=' multiple'
+        self.Name_lineEdit.setText(name)
         if selected==[0]:
             prefix='Incoming_media.'
+            self.Name_lineEdit.setPlaceholderText('Incoming Media')
         elif selected==[len(self.layer_list)-1]:
             prefix='Substrate.'
+            self.Name_lineEdit.setPlaceholderText('Substrate')
         else:
-            prefix='Layer{0}.'.format(np.min(selected))
+            prefix='Layer{0}.'.format(np.min(selected)-1)
+            if len(selected)==1:
+                self.Name_lineEdit.setPlaceholderText('Layer{0}'.format(np.min(selected)-1))
+            else:
+                self.Name_lineEdit.setPlaceholderText('Layer{0} multiple'.format(np.min(selected)-1))
+        self.Thickness.updateUiFromParameter([self.layer_list[x].thickness for x in self.selection],self.ties_thickness,prefix)                  
         self.NSLDR.updateUiFromParameter([self.layer_list[x].nsld_real for x in self.selection],self.ties_nsld_real,prefix)
         self.NSLDI.updateUiFromParameter([self.layer_list[x].nsld_imaginary for x in self.selection],self.ties_nsld_imaginary,prefix)
         self.MSLD_rho.updateUiFromParameter([self.layer_list[x].msld.rho for x in self.selection],self.ties_msld_rho,prefix)
@@ -47,21 +62,28 @@ class LayerPropertiesWidget(QtWidgets.QWidget, Ui_LayerProperties):
         self.MSLD_phi.updateUiFromParameter([self.layer_list[x].msld.phi for x in self.selection],self.ties_msld_phi,prefix)
         self.MSLD_rho.updateUiFromParameter([self.layer_list[x].msld.rho for x in self.selection],self.ties_msld_rho,prefix)
         self.Roughness.updateUiFromParameter([self.layer_list[x].roughness for x in self.selection],self.ties_roughness,prefix)
-        self.Thickness.updateUiFromParameter([self.layer_list[x].thickness for x in self.selection],self.ties_thickness,prefix)
         #TODO: rougness model and sublayers
-        #TODO: name setPlaceholderText(QString)
 
     def show_hide_roughness_extras(self,selected_tab):
         if selected_tab==5: #roughness tab selected
-            self.horizontalLayout_2.hide()
-        
+            self.roughness_model_label.show()
+            self.roughness_model_comboBox.show()
+            self.sublayers_label.show()
+            self.sublayers_spinBox.show()
+        else:
+            self.roughness_model_label.hide()
+            self.roughness_model_comboBox.hide()
+            self.sublayers_label.hide()
+            self.sublayers_spinBox.hide()
 
 if __name__=='__main__':
     app = QtWidgets.QApplication(sys.argv)
     l1=layer.Layer(name='layer0',nsld_real=1)
     l1.nsld_real.vary=True
-    l2=layer.Layer(nsld_real=2)
-    selected=[0]
-    window = LayerPropertiesWidget(layers=[l1,l2],selected=selected)
+    l2=layer.Layer(nsld_real=2,name='L0')
+    l3=layer.Layer(nsld_real=3)
+    l4=layer.Layer(nsld_real=4)
+    selected=[1,2]
+    window = LayerPropertiesWidget(layers=[l1,l2,l3,l4],selected=selected)
     window.show()
     sys.exit(app.exec_())

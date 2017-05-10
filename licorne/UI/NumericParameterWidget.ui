@@ -116,6 +116,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>value_lineEdit</tabstop>
+  <tabstop>fixed_radioButton</tabstop>
+  <tabstop>fit_radioButton</tabstop>
+  <tabstop>unchanged_radioButton</tabstop>
+  <tabstop>minimum_lineEdit</tabstop>
+  <tabstop>maximum_lineEdit</tabstop>
+  <tabstop>ties_comboBox</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

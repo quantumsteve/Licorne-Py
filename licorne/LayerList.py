@@ -56,4 +56,16 @@ def generate_available_ties(layer_list,incoming_media, substrate):
 
 
 def generate_parameter_lists(layer_list,incoming_media, substrate):
-    pass
+    layer_indexes=[]
+    layer_names=[]
+    layer_parameters=[]
+    layer_ties=[]
+    attribute_list=['thickness','nsld_real','nsld_imaginary','msld','roughness']
+    msld_attribute_list=['rho','theta','phi']
+    for i,current_layer in enumerate([incoming_media]+layer_list+[substrate]):
+        for attribute in attribute_list:
+            num_par=current_layer.__getattribute__(attribute)
+            if attribute!='msld':
+                if num_par.vary:
+                    pass
+                    

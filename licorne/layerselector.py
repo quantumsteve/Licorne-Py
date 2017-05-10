@@ -6,15 +6,19 @@ Ui_layerselector, QtBaseClass = uic.loadUiType('UI/layerselector.ui')
 
 class layerselector(QtWidgets.QWidget, Ui_layerselector):
     invalidSelection=QtCore.pyqtSignal(str)
-    def __init__(self,sample_model,*args):
+    sampleModelChanged=QtCore.pyqtSignal(SampleModel.SampleModel)
+    def __init__(self,sample_model=SampleModel.SampleModel(),*args):
         QtWidgets.QWidget.__init__(self,*args)
         Ui_layerselector.__init__(self)
         self.setupUi(self)
+        self.set_sample_model(sample_model)
+        self.listView.selectionModel().selectionChanged.connect(self.selectionChanged)
+        self.invalidSelection[str].connect(self.module_logger)
+
+    def set_sample_model(self,sample_model):
         self.sample_model=sample_model
         self.sample_model.setParent(self)
         self.listView.setModel(self.sample_model)
-        self.listView.selectionModel().selectionChanged.connect(self.selectionChanged)
-        self.invalidSelection[str].connect(self.module_logger)
 
     def module_logger(self,message):
         print('[layerselector]: '+message)
@@ -32,7 +36,8 @@ class layerselector(QtWidgets.QWidget, Ui_layerselector):
             self.sample_model.addItem(layer.Layer())
         self.listView.selectionModel().clear()
         for selection in selected:
-            self.listView.selectionModel().select(selection,QtCore.QItemSelectionModel.Select)         
+            self.listView.selectionModel().select(selection,QtCore.QItemSelectionModel.Select)
+        self.sampleModelChanged.emit(self.sample_model)    
 
     def delClicked(self):
         inds=sorted([s.row() for s in self.listView.selectionModel().selectedRows()], reverse=True)
@@ -44,6 +49,7 @@ class layerselector(QtWidgets.QWidget, Ui_layerselector):
                     self.sample_model.delItem(i-1)
         else:
             self.invalidSelection.emit("nothing selected")
+        self.sampleModelChanged.emit(self.sample_model)
             
     def selectionEntered(self):
         selection_string=str(self.select_lineEdit.text())
@@ -74,6 +80,7 @@ class layerselector(QtWidgets.QWidget, Ui_layerselector):
 
         
     def selectionChanged(self,selected,deselected):
+        print("connected")
         incoming_media_index=self.sample_model.index(0)
         substrate_index=self.sample_model.index(self.sample_model.rowCount()-1)
         all_rows=self.listView.selectionModel().selectedRows()
