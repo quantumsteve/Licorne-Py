@@ -78,9 +78,7 @@ class layerselector(QtWidgets.QWidget, Ui_layerselector):
             layer_index=self.sample_model.index(i)
             self.listView.selectionModel().select(layer_index,QtCore.QItemSelectionModel.Select)
 
-        
     def selectionChanged(self,selected,deselected):
-        print("connected")
         incoming_media_index=self.sample_model.index(0)
         substrate_index=self.sample_model.index(self.sample_model.rowCount()-1)
         all_rows=self.listView.selectionModel().selectedRows()

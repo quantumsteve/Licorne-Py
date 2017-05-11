@@ -65,7 +65,19 @@ def generate_parameter_lists(layer_list,incoming_media, substrate):
     for i,current_layer in enumerate([incoming_media]+layer_list+[substrate]):
         for attribute in attribute_list:
             num_par=current_layer.__getattribute__(attribute)
-            if attribute!='msld':
+            if attribute=='msld':
+                for msld_attribute in msld_attribute_list:
+                    msld_par=num_par.__getattribute__(msld_attribute)
+                    if msld_par.vary:
+                        layer_indexes.append(i)
+                        layer_names.append(current_layer.name)
+                        layer_parameters.append('msld.'+msld_par.name)
+                        layer_ties.append(msld_par.expr)
+            else:
                 if num_par.vary:
-                    pass
+                    layer_indexes.append(i)
+                    layer_names.append(current_layer.name)
+                    layer_parameters.append(num_par.name)
+                    layer_ties.append(num_par.expr)
+    return(layer_indexes,layer_names,layer_parameters,layer_ties)
                     
