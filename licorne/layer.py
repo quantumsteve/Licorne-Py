@@ -134,7 +134,7 @@ class Layer(object):
     msld = property(operator.attrgetter('_msld'))
     @msld.setter
     def msld(self,v):
-        self._msld = MSLD(v)
+        self._msld = MSLD(*v)
 
     roughness = property(operator.attrgetter('_roughness'))
     @roughness.setter
