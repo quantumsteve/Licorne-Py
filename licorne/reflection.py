@@ -363,7 +363,7 @@ def resolut3(RR, q, dq):
         dqc = abs(q[i + 1] - q[i - 1]) / 2.0
         if dq[i] < dqc / 2.0:
             RRr[i] = RR[i].real()
-        else
+        else:
             sigma_pi = dq[i] * pi_s
             sigma_sq = 2.0 * dq[i] * dq[i]
             # central part
@@ -428,7 +428,7 @@ def resolut3(RR, q, dq):
         qq = np.abs(q[1] - q[0])
         deltaq = qq
         while qq <= three_sigma:
-            RRr[0] = RRr[0] + RR[0].real() * exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
+            RRr[0] = RRr[0] + RR[0].real() * np.exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
             qq = qq + deltaq
     # second point
     dqc = np.abs(q[2] - q[0]) / 2
@@ -468,7 +468,7 @@ def resolut3(RR, q, dq):
         qq = np.abs(q[Nm1 - 1] - q[Nm1 - 2])
         three_sigma = 3.0 * dq[Nm1 - 1]
         while qq <= three_sigma:
-            RRr[Nm1 - 1] = RRr[Nm1 - 1] + RR[Nm1 - k].real() * exp(-qq * qq / sigma_sq) * np.abs(q[Nm1 - k + 1] - q[Nm1 - k - 1]) / (2.0 * sigma_pi)
+            RRr[Nm1 - 1] = RRr[Nm1 - 1] + RR[Nm1 - k].real() * np.exp(-qq * qq / sigma_sq) * np.abs(q[Nm1 - k + 1] - q[Nm1 - k - 1]) / (2.0 * sigma_pi)
             k = k + 1
             if Nm1 - k < 1:
                 break
@@ -476,7 +476,7 @@ def resolut3(RR, q, dq):
         qq = np.abs(q[Nm1] - q[Nm1 - 1])
         deltaq = np.abs(q[Nm1] - q[Nm1 - 2]) / 2.0
         while qq <= three_sigma:
-            RRr[Nm1 - 1] = RRr[Nm1 - 1] + RR[Nm1].real() * exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
+            RRr[Nm1 - 1] = RRr[Nm1 - 1] + RR[Nm1].real() * np.exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
             qq = qq + deltaq
     # last point
     dqc = abs(q[Nm1] - q[Nm1 - 1])
@@ -500,6 +500,15 @@ def resolut3(RR, q, dq):
         qq = abs(q[Nm1] - q[Nm1 - 1])
         deltaq = qq
         while qq <= three_sigma:
-            RRr[Nm1] = RRr[Nm1] + RR[Nm1].real() * exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
+            RRr[Nm1] = RRr[Nm1] + RR[Nm1].real() * np.exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
             qq = qq + deltaq
  
+def resolut(RR, q, dq, res_mode):
+    if res_mode == 1:
+        return resolut1(RR, q, dq)
+    elif res_mode == 2:
+        return resolut2(RR, q, dq)
+    elif res_mode == 3:
+        return resolut3(RR,q,dq)
+    else:
+        raise RuntimeError("Resolution mode must be 1, 2, or 3")
