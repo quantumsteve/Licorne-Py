@@ -47,10 +47,26 @@ class TestReflectionClass(unittest.TestCase):
         R = reflection.reflection(inc_moment, layers, substrate)
         for k in range(n_of_outputs):
             RR = reflection.spin_av(R, pol_vecs[k], an_vecs[k], pol_eff, an_eff)
-            RRr = reflection.resolut(RR, q, dq)
+            RRr = reflection.resolut(RR, q, dq, 2)
             RRr = RRr * norm_factor[k] + background
 
-            reference_values = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/refl'+str(k+1)+'.dat'), unpack=True)
+            reference_values = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/res_mode2refl'+str(k+1)+'.dat'), unpack=True)
+            assert_array_almost_equal(reference_values, RRr)
+
+        for k in range(n_of_outputs):
+            RR = reflection.spin_av(R, pol_vecs[k], an_vecs[k], pol_eff, an_eff)
+            RRr = reflection.resolut(RR, q, dq, 1)
+            RRr = RRr * norm_factor[k] + background
+
+            reference_values = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/res_mode1refl'+str(k+1)+'.dat'), unpack=True)
+            assert_array_almost_equal(reference_values, RRr)
+
+        for k in range(n_of_outputs):
+            RR = reflection.spin_av(R, pol_vecs[k], an_vecs[k], pol_eff, an_eff)
+            RRr = reflection.resolut(RR, q, dq, 3)
+            RRr = RRr * norm_factor[k] + background
+
+            reference_values = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/res_mode3refl'+str(k+1)+'.dat'), unpack=True)
             assert_array_almost_equal(reference_values, RRr)
 
 if __name__ == '__main__':
