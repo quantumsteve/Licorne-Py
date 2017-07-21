@@ -93,6 +93,15 @@ def rough_sublayer(layer_up,layer_down):
         corresponding_layer.append(1)
     return (sublayer_list,corresponding_layer)
 
+def generateSublayers(layerlist):
+    sublayers=[]
+    corresponding=[]
+    for i in range(len(layerlist)-1):
+        s,c=rough_sublayer(layers[i],layers[i+1])
+        sublayers+=s
+        corresponding+=[j+i for j in c]
+    return (sublayers,corresponding)
+
 if __name__=='__main__':
     Incoming=Layer(thickness=np.inf,
                  nsld_real=0,
@@ -140,19 +149,21 @@ if __name__=='__main__':
                  roughness_model=RoughnessModel.NONE,
                  sublayers=16)           
 
-    sublayers=[]
-    corresponding=[]
     layers=[Incoming,Layer1,Layer2,Layer3,Substrate]
+    sublayers,corresponding=generateSublayers(layers)
+    """sublayers=[]
+    corresponding=[]
     for i in range(len(layers)-1):
         s,c=rough_sublayer(layers[i],layers[i+1])
         sublayers+=s
         corresponding+=[j+i for j in c]
+    """
     for sl,cor in zip(sublayers,corresponding):
         print(cor,sl.thickness.value,sl.nsld_real.value,sl.nsld_imaginary.value,sl.msld.rho.value,sl.msld.theta.value,sl.msld.phi.value)    
     
     
     thick=[sl.thickness.value for sl in sublayers]
-    print(thick,corresponding)
+    #print(thick,corresponding)
     import matplotlib
     matplotlib.use("agg")
     import matplotlib.pyplot as plt
@@ -165,19 +176,23 @@ if __name__=='__main__':
         depth=np.array(thick)
         thickmax=depth[np.isfinite(depth)].max()
         depth[np.isinf(depth)]=thickmax
+        th1=depth[corresponding.index(1)]
         depth=depth.cumsum()
-        depth-=depth[corresponding.index(1)]
+        depth-=depth[corresponding.index(1)]-th1
+        print(thickmax)
         depth=np.insert(depth,0,depth[0]-thickmax)
-        val=np.array([sl.nsld_real.value for sl in sublayers])
+        #depth=np.append(depth,depth[-1]+thickmax)
+        val=np.array([sl.nsld_imaginary.value for sl in sublayers])
         patches=[]
         for i,v in enumerate(val):
             polygon=Polygon([[depth[i],0.],[depth[i],v],[depth[i+1],v],[depth[i+1],0]],True)
             patches.append(polygon)
         p = PatchCollection(patches, cmap=matplotlib.cm.jet, alpha=0.4, picker=True)
         colors = 100*np.random.rand(len(patches))
-        p.set_array(np.array(colors))
-        ax.plot(depth[1:],val)
-        #ax.add_collection(p)
+        p.set_array(np.array(corresponding))
+        ax.plot(depth[1:],val,visible=False)
+        ax.add_collection(p)
+        ax.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
         ax.set_xlabel('Depth')
         ax.set_ylabel('NSLD')
         
