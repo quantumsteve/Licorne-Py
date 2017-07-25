@@ -94,12 +94,51 @@ class TestGenerateSublayers(unittest.TestCase):
                        msld_phi=0,
                        msld_theta=0,
                        roughness=5.,
-                       roughness_model=RoughnessModel.NONE,
+                       roughness_model=RoughnessModel.TANH,
                        sublayers=10)
-        layers=[Incoming,Layer1,Layer2,Layer3,Substrate]
+        layers=[Incoming,Layer1,Layer2,Layer3,Layer4,Layer5,Layer6,Layer7,Layer8,Substrate]
         sublayers,corresponding=generateSublayers(layers)
         for s in sublayers:
             print(s.thickness.value,s.nsld_real.value)
+
+        thick=[sl.thickness.value for sl in sublayers]
+        #print(thick,corresponding)
+        import matplotlib
+        matplotlib.use("agg")
+        import matplotlib.pyplot as plt
+        from matplotlib.backends.backend_pdf import PdfPages
+        import matplotlib.cm
+        from matplotlib.patches import Polygon
+        from matplotlib.collections import PatchCollection
+        with PdfPages('NSLD.pdf') as pdf:
+            fig,ax=plt.subplots()    
+            depth=np.array(thick)
+            thickmax=depth[np.isfinite(depth)].max()
+            depth[np.isinf(depth)]=thickmax
+            th1=depth[corresponding.index(1)]
+            depth=depth.cumsum()
+            depth-=depth[corresponding.index(1)]-th1
+            print(thickmax)
+            depth=np.insert(depth,0,depth[0]-thickmax)
+            #depth=np.append(depth,depth[-1]+thickmax)
+            val=np.array([sl.nsld_real.value for sl in sublayers])
+            patches=[]
+            for i,v in enumerate(val):
+                polygon=Polygon([[depth[i],0.],[depth[i],v],[depth[i+1],v],[depth[i+1],0]],True)
+                patches.append(polygon)
+            p = PatchCollection(patches, cmap=matplotlib.cm.jet, alpha=0.4, picker=True)
+            colors = 100*np.random.rand(len(patches))
+            p.set_array(np.array(corresponding))
+            ax.plot(depth[1:],val,visible=False)
+            ax.add_collection(p)
+            ax.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
+            ax.set_xlabel('Depth')
+            ax.set_ylabel('NSLD')
+            
+            fig.tight_layout()
+            pdf.savefig(fig)
+        plt.close()
+
 
 
 if __name__ == '__main__':
