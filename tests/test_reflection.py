@@ -47,11 +47,11 @@ class TestReflectionClass(unittest.TestCase):
         R = reflection.reflection(inc_moment, layers, substrate)
         for k in range(n_of_outputs):
             RR = reflection.spin_av(R, pol_vecs[k], an_vecs[k], pol_eff, an_eff)
-            RRr = reflection.resolut(RR, q, dq)
-            RRr = RRr * norm_factor[k] + background
-
-            reference_values = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/refl'+str(k+1)+'.dat'), unpack=True)
-            assert_array_almost_equal(reference_values, RRr)
+            for res_mode in range(1,3):
+                RRr = reflection.resolut(RR, q, dq, res_mode)
+                RRr = RRr * norm_factor[k] + background
+                reference_values = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/res_mode'+str(res_mode)+'refl'+str(k+1)+'.dat'), unpack=True)
+                assert_array_almost_equal(reference_values, RRr)
 
 if __name__ == '__main__':
     unittest.main()
