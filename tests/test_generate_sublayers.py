@@ -1,4 +1,4 @@
-import unittest
+import unittest,os
 import numpy as np
 from licorne.layer import Layer,RoughnessModel
 from licorne.generateSublayers import generateSublayers
@@ -103,7 +103,7 @@ class TestGenerateSublayers(unittest.TestCase):
     def test_sublayers(self):
         layers=layer_data_for_testing()
         sublayers,corresponding=generateSublayers(layers)
-        _, Thick, Re_NSLD, Im_NSLD, MSLD_rho, MSLD_phi, MSLD_theta=np.loadtxt('data/profile_sublayers.dat',unpack=True)
+        _, Thick, Re_NSLD, Im_NSLD, MSLD_rho, MSLD_phi, MSLD_theta=np.loadtxt(os.path.join(os.path.dirname(__file__),'data/profile_sublayers.dat',unpack=True)
         Thick=Thick[1:-2]
         Re_NSLD=Re_NSLD[1:-2]
         Im_NSLD=Im_NSLD[1:-2]
