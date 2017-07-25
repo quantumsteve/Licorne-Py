@@ -134,7 +134,7 @@ class TestGenerateSublayers(unittest.TestCase):
             ax.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
             ax.set_xlabel('Depth')
             ax.set_ylabel('NSLD')
-            
+
             fig.tight_layout()
             pdf.savefig(fig)
         plt.close()
