@@ -224,7 +224,37 @@ def spin_av(R, n1, n2, pol_eff, an_eff):
     Out = (RRt.oneone + RRt.twotwo) / 4.0
     return Out
 
-def resolut(RR, q, dq):
+def resolut1(RR, q, dq):
+    N = len(q)
+    denominator = np.zeros(N)
+    RRr = np.zeros(N)
+    # left neighbours
+    for i in range(1, N):
+        k = 1;
+        while q[i] - q[i - k] <= dq[i] / 2.0:
+            denominator[i] = denominator[i] + 1.0
+            RRr[i] = RRr[i] + RR[i - k].real
+            k = k + 1
+            if i - k < 0:
+                break;
+
+    # right neighbours and center
+    denominator[N - 1] = denominator[N - 1] + 1
+    RRr[N - 1] = (RRr[N - 1] + RR[N - 1].real) / denominator[N - 1]
+    for i in range(N-1):
+        k = 1
+        denominator[i] = denominator[i] + 1
+        RRr[i] = RRr[i] + RR[i].real
+        while q[i + k] - q[i] <= dq[i] / 2.0:
+            denominator[i] = denominator[i] + 1
+            RRr[i] = RRr[i] + RR[i + k].real
+            k = k + 1
+            if i + k > N - 1:
+                break
+        RRr[i] = RRr[i] / denominator[i]
+    return RRr
+
+def resolut2(RR, q, dq):
     N = len(q)
     Nm1 = N - 1
     RRr = np.zeros(N)
@@ -325,3 +355,162 @@ def resolut(RR, q, dq):
             qq = qq + deltaq
     return RRr
 
+def resolut3(RR, q, dq):
+    N = len(q)
+    Nm1 = N - 1
+    RRr = np.zeros(N)
+    pi_s = np.sqrt(2.0 * np.pi)
+    for i in range(2, Nm1 - 1):
+        dqc = abs(q[i + 1] - q[i - 1]) / 2.0
+        if dq[i] < dqc / 2.0:
+            RRr[i] = RR[i].real
+        else:
+            sigma_pi = dq[i] * pi_s
+            sigma_sq = 2.0 * dq[i] * dq[i]
+            # central part
+            RRr[i] = RR[i].real * dqc
+            # left part
+            k = 1
+            qq = np.abs(q[i] - q[i - 1])
+            deltaq = np.abs(q[i] - q[i - 2]) / 2.0
+            Rk = RR[i - k].real
+            three_sigma = 3.0 * dq[i]
+            while qq <= three_sigma:
+                RRr[i] = RRr[i] + Rk * np.exp(-qq * qq / sigma_sq) * deltaq
+                k = k + 1
+                ik = i - k
+                if ik < 1:
+                    # left tail
+                    deltaq = np.abs(q[1] - q[0])
+                    qq = qq + deltaq
+                    Rk = RR[0].real
+                else:
+                    qq = np.abs(q[i] - q[ik])
+                    deltaq = np.abs(q[ik + 1] - q[ik - 1]) / 2.0
+                    Rk = RR[i - k].real
+            # right part
+            k = 1
+            qq = np.abs(q[i + 1] - q[i])
+            deltaq = np.abs(q[i + 2] - q[i]) / 2.0
+            Rk = RR[i + k].real
+            while qq <= three_sigma:
+                RRr[i] = RRr[i] + Rk * np.exp(-1.0 * qq * qq / sigma_sq) * deltaq
+                k = k + 1
+                ik = i + k
+                if ik > Nm1 - 1:
+                    # right tail
+                    deltaq = np.abs(q[Nm1] - q[Nm1 - 1])
+                    qq = qq + deltaq
+                    Rk = RR[Nm1].real
+                else:
+                    qq = np.abs(q[ik] - q[i])
+                    deltaq = np.abs(q[ik + 1] - q[ik - 1]) / 2.0
+                    Rk = RR[ik].real
+            RRr[i] = RRr[i] / sigma_pi
+    # first point
+    dqc = np.abs(q[1] - q[0])
+    if dq[0] < dqc / 2.0:
+        RRr[0] = RR[0].real
+    else:
+        sigma_pi = dq[0] * pi_s
+        sigma_sq = 2.0 * dq[0] * dq[0]
+        # central part
+        RRr[0] = RR[0].real * dqc / (sigma_pi)
+        # right part
+        k = 1
+        qq = np.abs(q[1] - q[0])
+        three_sigma = 3.0 * dq[0]
+        while qq <= three_sigma:
+            RRr[0] = RRr[0] + RR[k].real * np.exp(-qq * qq / sigma_sq) * np.abs(q[k + 1] - q[k - 1]) / (2.0 * sigma_pi)
+            k = k + 1
+            if k > Nm1 - 1:
+                break
+            qq = np.abs(q[k] - q[0])
+        qq = np.abs(q[1] - q[0])
+        deltaq = qq
+        while qq <= three_sigma:
+            RRr[0] = RRr[0] + RR[0].real * np.exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
+            qq = qq + deltaq
+    # second point
+    dqc = np.abs(q[2] - q[0]) / 2
+    if dq[0] < dqc / 2.0:
+        RRr[0] = RR[0].real
+    else:
+        sigma_pi = dq[1] * pi_s
+        sigma_sq = 2.0 * dq[1] * dq[1]
+        # central part
+        RRr[1] = RR[1].real * dqc / (sigma_pi)
+        # right part
+        k = 2
+        qq = np.abs(q[2] - q[1])
+        three_sigma = 3.0 * dq[1]
+        while qq <= three_sigma:
+            RRr[1] = RRr[1] + RR[k].real * np.exp(-qq * qq / sigma_sq) * np.abs(q[k + 1] - q[k - 1]) / (2.0 * sigma_pi)
+            k = k + 1
+            if k > Nm1 - 1:
+                break
+            qq = np.abs(q[k] - q[1])
+        qq = np.abs(q[1] - q[0])
+        deltaq = np.abs(q[2] - q[0]) / 2.0
+        while qq <= three_sigma:
+            RRr[1] = RRr[1] + RR[0].real * np.exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
+            qq = qq + deltaq
+    # point before last
+    dqc = np.abs(q[Nm1] - q[Nm1 - 2]) / 2.0
+    if dq[Nm1 - 1] < dqc / 2.0:
+        RRr[Nm1 - 1] = RR[Nm1 - 1].real
+    else:
+        sigma_pi = dq[Nm1 - 1] * pi_s
+        sigma_sq = 2.0 * dq[Nm1 - 1] * dq[Nm1 - 1]
+        # central part
+        RRr[Nm1 - 1] = RR[Nm1 - 1].real * dqc / (sigma_pi)
+        # left part
+        k = 2
+        qq = np.abs(q[Nm1 - 1] - q[Nm1 - 2])
+        three_sigma = 3.0 * dq[Nm1 - 1]
+        while qq <= three_sigma:
+            RRr[Nm1 - 1] = RRr[Nm1 - 1] + RR[Nm1 - k].real * np.exp(-qq * qq / sigma_sq) * np.abs(q[Nm1 - k + 1] - q[Nm1 - k - 1]) / (2.0 * sigma_pi)
+            k = k + 1
+            if Nm1 - k < 1:
+                break
+            qq = abs(q[Nm1 - 1] - q[Nm1 - k])
+        qq = np.abs(q[Nm1] - q[Nm1 - 1])
+        deltaq = np.abs(q[Nm1] - q[Nm1 - 2]) / 2.0
+        while qq <= three_sigma:
+            RRr[Nm1 - 1] = RRr[Nm1 - 1] + RR[Nm1].real * np.exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
+            qq = qq + deltaq
+    # last point
+    dqc = abs(q[Nm1] - q[Nm1 - 1])
+    if dq[Nm1] < dqc / 2.0:
+        RRr[Nm1] = RR[Nm1].real
+    else:
+        sigma_pi = dq[Nm1] * pi_s
+        sigma_sq = 2.0 * dq[Nm1] * dq[Nm1]
+        # central part
+        RRr[Nm1] = RR[Nm1].real * dqc / (sigma_pi)
+        # left part
+        k = 1
+        qq = abs(q[Nm1] - q[Nm1 - 1])
+        three_sigma = 3.0 * dq[Nm1]
+        while qq <= three_sigma:
+            RRr[Nm1] = RRr[Nm1] + RR[Nm1 - k].real * np.exp(-qq * qq / sigma_sq) * np.abs(q[Nm1 - k + 1] - q[Nm1 - k - 1]) / (2.0 * sigma_pi)
+            k = k + 1
+            if Nm1 - k < 1:
+                break
+            qq = abs(q[Nm1] - q[Nm1 - k])
+        qq = abs(q[Nm1] - q[Nm1 - 1])
+        deltaq = qq
+        while qq <= three_sigma:
+            RRr[Nm1] = RRr[Nm1] + RR[Nm1].real * np.exp(-qq * qq / sigma_sq) * deltaq / sigma_pi
+            qq = qq + deltaq
+    return RRr
+ 
+def resolut(RR, q, dq, res_mode):
+    if res_mode == 1:
+        return resolut1(RR, q, dq)
+    elif res_mode == 2:
+        return resolut2(RR, q, dq)
+    elif res_mode == 3:
+        return resolut3(RR,q,dq)
+    else:
+        raise RuntimeError("Resolution mode must be 1, 2, or 3")
