@@ -62,6 +62,7 @@ class Layer(object):
                  msld_phi=0.,
                  roughness=0.,
                  roughness_model=RoughnessModel.NONE,
+                 sublayers=0,
                  name=None):
         """
         Create a layer with the following parameters:
@@ -73,6 +74,7 @@ class Layer(object):
         - msld_phi: magnetic scattering length density magnitude
         - roughness: roughness
         - roughess_model: model for the roughness, one of RoughnessModel types
+        - sublayers: number of sublayers at the upper surface used to calculate roughness
         - name: an optional string to use as the name of the layer
         Numerical parameters have minimum/maximum values that are going
         to be used for fitting. To input just the value, just enter a single number.
@@ -85,6 +87,7 @@ class Layer(object):
         self.msld=(msld_rho,msld_theta, msld_phi)
         self.roughness=roughness
         self.roughness_model=roughness_model
+        self.sublayers=sublayers
         self.name=name
 
     def __repr__(self):
@@ -93,6 +96,7 @@ class Layer(object):
         for x in [self.thickness,self.nsld_real,self.nsld_imaginary,self.msld, self.roughness]:
             s.append(x.__repr__())
         s.append("roughness_model: {0}".format(self.roughness_model))
+        s.append("sublayers: {0}".format(self.sublayers))
         return '\n '.join(s)
 
     name = property(operator.attrgetter('_name'))
@@ -130,7 +134,7 @@ class Layer(object):
     msld = property(operator.attrgetter('_msld'))
     @msld.setter
     def msld(self,v):
-        self._msld = MSLD(v)
+        self._msld = MSLD(*v)
 
     roughness = property(operator.attrgetter('_roughness'))
     @roughness.setter
@@ -144,3 +148,7 @@ class Layer(object):
             raise ValueError('roughness_model is not the corect type')
         self._roughness_model = v
 
+    sublayers = property(operator.attrgetter('_sublayers'))
+    @sublayers.setter
+    def sublayers(self,v):
+        self._sublayers = int(v)

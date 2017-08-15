@@ -28,7 +28,10 @@ class Window(QDialog):
         layout.addWidget(self.canvas)
 
         self.setLayout(layout)
-        self.dataQ,self.dataR,self.datadR,_,_=np.loadtxt('data/REF_M_24600+24601+24602+24603_Specular_++-SD-PFO30-2-20Oe.dat',unpack=True)
+        self.dataQ,_=np.loadtxt('/home/andrei/Licorne-Py/tests/data/refl_q_dq.dat',unpack=True)
+        self.dataR1=np.loadtxt('/home/andrei/Licorne-Py/tests/data/refl1.dat',unpack=True)
+        self.dataR2=np.loadtxt('/home/andrei/Licorne-Py/tests/data/refl2.dat',unpack=True)
+        #self.dataQ,self.dataR,self.datadR,_,_=np.loadtxt('data/REF_M_24600+24601+24602+24603_Specular_++-SD-PFO30-2-20Oe.dat',unpack=True)
         self.plot()
 
     def plot(self):
@@ -37,7 +40,9 @@ class Window(QDialog):
         self.figure.patch.set_facecolor('white')
         # create an axis
         ax = self.figure.add_subplot(111)
-        ax.errorbar(self.dataQ, self.dataR, yerr=self.datadR,fmt='ro' )
+        #ax.errorbar(self.dataQ, self.dataR, yerr=self.datadR,fmt='ro' )
+        ax.plot(self.dataQ, self.dataR1)
+        ax.plot(self.dataQ, self.dataR2)
         ax.set_yscale('log')
         ax.grid(True,which="both")
         ax.set_xlabel('Q')
