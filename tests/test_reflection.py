@@ -53,6 +53,28 @@ class TestReflectionClass(unittest.TestCase):
                 reference_values = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/res_mode'+str(res_mode)+'refl'+str(k+1)+'.dat'), unpack=True)
                 assert_array_almost_equal(reference_values, RRr)
 
-if __name__ == '__main__':
-    unittest.main()
+#    def Test_r2_6_508(self):
+
+q = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/r2_6_508/q.dat'),unpack=True)
+inc_moment = q / 2.0
+
+substrate = complex(0.0, 0.0)
+layer_info = np.loadtxt(os.path.join(os.path.dirname(__file__), 'data/r2_6_508/profile_sublayers.dat'), unpack=True)
+for line in layer_info:
+    print line
+layers = []
+for line in layer_info:
+    l = Layer()
+    l.thickness = line[1]
+    l.nsld = complex(line[2], line[3])
+    l.msld = [line[4], np.deg2rad(line[5]), np.deg2rad(line[6])]
+    l.NC = 0.0
+    layers.append(l)
+
+#R = reflection.reflection(inc_moment, layers, substrate)
+
+
+
+#if __name__ == '__main__':
+#    unittest.main()
 
