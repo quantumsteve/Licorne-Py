@@ -1,13 +1,11 @@
 from __future__ import (absolute_import, division, print_function)
 from PyQt5 import QtCore, QtWidgets
-import sys
 import numpy as np
 from licorne.layer import Layer
 from licorne.generateSublayers import generateSublayers
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
 import matplotlib.cm
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
@@ -139,13 +137,15 @@ def plot_sublayers(ax,layers,function='NSLD_REAL'):
 
 
 if __name__=='__main__':
+    #This is for testing purposes only
+    import sys
     app=QtWidgets.QApplication(sys.argv)
     mainForm=layerplot()
     from licorne.layer import RoughnessModel
     newSample=[Layer(thickness=np.inf,nsld_real=1.5),
                Layer(thickness=20.,nsld_real=1.),
                Layer(thickness=25.,nsld_real=3.,roughness=5, roughness_model=RoughnessModel.TANH,sublayers=7),
-               Layer(thickness=10.,nsld_real=5.),
+               Layer(thickness=30.,nsld_real=5.,msld_rho=7e-7,roughness=3, roughness_model=RoughnessModel.TANH,sublayers=7),
                Layer(nsld_real=4.,thickness=np.inf)]
     mainForm.updateSample(newSample)
     mainForm.show()
