@@ -3,7 +3,6 @@ import numpy as np
 from licorne.layer import Layer,RoughnessModel
 from licorne.generateSublayers import generateSublayers
 
-
 def layer_data_for_testing():
     Incoming=Layer(thickness=np.inf,
                    nsld_real=0,
@@ -108,6 +107,8 @@ class TestGenerateSublayers(unittest.TestCase):
         Re_NSLD=Re_NSLD[1:-2]
         Im_NSLD=Im_NSLD[1:-2]
         MSLD_rho=MSLD_rho[1:-2]
+        MSLD_phi=MSLD_phi[1:-2]
+        MSLD_theta=MSLD_theta[1:-2]
         sl_thick=np.array([s.thickness.value for s in sublayers[1:-1]])
         sl_nsld=np.array([s.nsld_real.value for s in sublayers[1:-1]])
         sl_nsldi=np.array([s.nsld_imaginary.value for s in sublayers[1:-1]])
@@ -119,10 +120,12 @@ class TestGenerateSublayers(unittest.TestCase):
         #Now test that msld.theta and msld.phi are constant in a layer
         sl_msldt=np.array([s.msld.theta.value for s in sublayers[1:-1]])
         sl_msldp=np.array([s.msld.phi.value for s in sublayers[1:-1]])
+        np.testing.assert_allclose(MSLD_theta,sl_msldt,atol=1e-3)
+        np.testing.assert_allclose(MSLD_phi,sl_msldp,atol=1e-3)
         corresponding=corresponding[1:-1]
         for t,p,l in zip(sl_msldt,sl_msldp,corresponding):
             self.assertAlmostEqual(t,layers[int(l)].msld.theta.value)
             self.assertAlmostEqual(p,layers[int(l)].msld.phi.value)
-
+        
 if __name__ == '__main__':
     unittest.main()
