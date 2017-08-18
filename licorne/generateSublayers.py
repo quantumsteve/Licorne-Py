@@ -99,7 +99,7 @@ def generateSublayers(layerlist):
     for i in range(len(layerlist)-1):
         s,c=rough_sublayer(layerlist[i],layerlist[i+1])
         sublayers+=s
-        corresponding+=[j+i for j in c]
+        corresponding+=[int(j)+i for j in c]
     return (sublayers,corresponding)
 
 
