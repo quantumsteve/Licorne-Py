@@ -148,13 +148,28 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_Polx"/>
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_Polx">
+         <property name="minimum">
+          <double>-99.989999999999995</double>
+         </property>
+        </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_Poly"/>
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_Poly">
+         <property name="minimum">
+          <double>-99.989999999999995</double>
+         </property>
+        </widget>
        </item>
        <item row="0" column="3">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_Polz"/>
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_Polz">
+         <property name="decimals">
+          <number>2</number>
+         </property>
+         <property name="minimum">
+          <double>-99.989999999999995</double>
+         </property>
+        </widget>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_AnalyzerPol">
@@ -164,13 +179,25 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_Anax"/>
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_Anax">
+         <property name="minimum">
+          <double>-99.989999999999995</double>
+         </property>
+        </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_Anay"/>
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_Anay">
+         <property name="minimum">
+          <double>-99.989999999999995</double>
+         </property>
+        </widget>
        </item>
        <item row="1" column="3">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_Anaz"/>
+        <widget class="QDoubleSpinBox" name="doubleSpinBox_Anaz">
+         <property name="minimum">
+          <double>-99.989999999999995</double>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
