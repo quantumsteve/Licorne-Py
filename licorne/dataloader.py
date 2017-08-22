@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, division, print_function)
 from PyQt5 import QtCore, QtWidgets, QtGui, uic
+from licorne import plaintexteditwithlinenumbers
 import numpy as np
 
 Ui_dataloader, QtBaseClass = uic.loadUiType('UI/dataloader.ui')
@@ -76,7 +77,10 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
                 self.filesize=len(lines)
                 for line_number,line in enumerate(lines):
                     self.plainTextEdit_FileContent.appendPlainText(line.rstrip())
-                    char0=line.strip()[0]
+                    try:
+                        char0=line.strip()[0]
+                    except IndexError:
+                        char0='#'
                     if search_first_num and char0.isdigit():
                         search_first_num=False
                         self.startrow=line_number+1

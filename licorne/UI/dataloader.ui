@@ -193,7 +193,7 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="3">
-    <widget class="QPlainTextEdit" name="plainTextEdit_FileContent">
+    <widget class="plaintexteditwithlinenumbers" name="plainTextEdit_FileContent">
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAsNeeded</enum>
      </property>
@@ -210,6 +210,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>plaintexteditwithlinenumbers</class>
+   <extends>QPlainTextEdit</extends>
+   <header location="global">plaintexteditwithlinenumbers.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
