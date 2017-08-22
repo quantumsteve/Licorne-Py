@@ -1,25 +1,27 @@
 from __future__ import (absolute_import, division, print_function)
 from PyQt5 import QtCore, QtWidgets, QtGui, uic
-from licorne import plaintexteditwithlinenumbers
 import numpy as np
 
 Ui_dataloader, QtBaseClass = uic.loadUiType('UI/dataloader.ui')
 
 class dataloader(QtWidgets.QWidget,Ui_dataloader):
+    dataSignal=QtCore.pyqtSignal(tuple)
     def __init__(self, *args):
         QtWidgets.QWidget.__init__(self, *args)
         Ui_dataloader.__init__(self)
         self.setupUi(self)
         self.filename=''
+        self.data=np.array([])
         self.startrow=1
         self.endrow=2
         self.qcolumn=1
         self.rcolumn=2
         self.ecolumn=3
         self.filesize=0
+        self.Ppolarizer=np.zeros(3)
+        self.Panalyzer=np.zeros(3)
         self.error_dialog = QtWidgets.QErrorMessage()
         self.updatedatalimits()
-        #self.filename='/home/3y9/licorne/fromValeria/REF_M_24600+24601+24602+24603_Specular_++-SD-PFO30-2-20Oe.dat'
         self.buttonBox.accepted.connect(self.senddata)
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.helpRequested.connect(self.showhelp)
@@ -30,7 +32,19 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
         self.spinBox_QColumn.valueChanged.connect(self.updateQCfromui)
         self.spinBox_RColumn.valueChanged.connect(self.updateRCfromui)
         self.spinBox_EColumn.valueChanged.connect(self.updateECfromui)
-        #TODO: connect polarization selectors
+        self.dataSignal.connect(self.debuginfo)
+        self.doubleSpinBox_Anax.valueChanged.connect(self.updatePfromui)
+        self.doubleSpinBox_Anay.valueChanged.connect(self.updatePfromui)
+        self.doubleSpinBox_Anaz.valueChanged.connect(self.updatePfromui)
+        self.doubleSpinBox_Polx.valueChanged.connect(self.updatePfromui)
+        self.doubleSpinBox_Poly.valueChanged.connect(self.updatePfromui)
+        self.doubleSpinBox_Polz.valueChanged.connect(self.updatePfromui)
+        self.disableOK()
+
+    def debuginfo(self,content):
+        print("Data: {0} rows".format(content[0].shape[0]))
+        print("P_polarizer: ",content[1])
+        print("P_analyzer: ",content[2])
 
     def loadfile(self):
         if len(self.lineEdit_Filename.text().strip())==0:
@@ -47,17 +61,37 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
             self.filename=fileName
             self.update_text()
 
-    def senddata(self):
-        data=np.genfromtxt(self.filename,skip_header=self.startrow-2,skip_footer=self.filesize-self.endrow)
+    def readdata(self):
         try:
-            qvalues=data[:,self.qcolumn-1]
-            rvalues=data[:,self.rcolumn-1]
-            errvalues=data[:,self.ecolumn-1]
-            #TODO send the data
-            print(qvalues)
-            self.close()
-        except IndexError:
-            self.error_dialog.showMessage('Could not find columns for Q, Reflectivity, or Error')
+            data=np.genfromtxt(self.filename,skip_header=self.startrow-1,skip_footer=self.filesize-self.endrow)
+        except:
+            self.disableOK()
+            return
+        testSet=set([self.qcolumn,self.rcolumn,self.ecolumn])
+        if len(testSet)!=3:
+            self.error_dialog.showMessage('Could not find independent columns for Q, Reflectivity, or Error')
+            self.disableOK()
+            return
+        if len(data.shape)!=2:
+            self.error_dialog.showMessage('Could not read enough data. Check that the last row is greater than the first row')
+            self.disableOK()
+            return
+        if max(testSet)>data.shape[1]:
+            self.error_dialog.showMessage('Column numbers for Q, Reflectivity, or Error must be less than {0}'.format(data.shape[1]))
+            self.disableOK()
+            return
+        self.enableOK()
+        self.data=data
+
+    def enableOK(self):
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(True)
+
+    def disableOK(self):
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
+
+    def senddata(self):
+        self.dataSignal.emit((self.data,self.Ppolarizer,self.Panalyzer))
+        self.close()
 
     def showhelp(self):
         pass
@@ -90,7 +124,7 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
         self.rcolumn=2
         self.ecolumn=3
         self.updatedatalimits()
-
+        self.readdata()
 
     def updatedatalimits(self):
         self.spinBox_FirstRow.setValue(self.startrow)
@@ -101,20 +135,27 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
 
     def updateFRfromui(self):
         self.startrow=int(self.spinBox_FirstRow.value())
+        self.readdata()
 
     def updateLRfromui(self):
         self.endrow=int(self.spinBox_LastRow.value())
+        self.readdata()
 
     def updateQCfromui(self):
         self.qcolumn=int(self.spinBox_QColumn.value())
+        self.readdata()
 
     def updateRCfromui(self):
         self.rcolumn=int(self.spinBox_RColumn.value())
+        self.readdata()
 
     def updateECfromui(self):        
         self.ecolumn=int(self.spinBox_EColumn.value())
+        self.readdata()
 
-
+    def updatePfromui(self):
+        self.Ppolarizer=np.array([self.doubleSpinBox_Polx.value(),self.doubleSpinBox_Poly.value(),self.doubleSpinBox_Polz.value()])
+        self.Panalyzer=np.array([self.doubleSpinBox_Anax.value(),self.doubleSpinBox_Anay.value(),self.doubleSpinBox_Anaz.value()])
 
 if __name__=='__main__':
     #This is for testing purposes only
