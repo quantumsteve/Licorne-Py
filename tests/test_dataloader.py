@@ -1,7 +1,7 @@
 import unittest,sys,os
 from PyQt5 import QtTest,QtWidgets,QtCore
 import numpy as np
-sys.path.append('../licorne')#needed for UI
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'../licorne')))#needed for UI
 from licorne.dataloader import dataloader
 
 app=QtWidgets.QApplication(sys.argv)
