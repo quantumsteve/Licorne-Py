@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function)
 from PyQt5 import QtCore, QtWidgets, QtGui, uic
 import numpy as np
-import os
+import os,sys
 
 
 ui=os.path.join(os.path.dirname(__file__),'UI/dataloader.ui')
@@ -107,7 +107,10 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
         self.endrow=2
         search_first_num=True
         try:
-            fh=open(self.filename,encoding="utf-8")
+            kwargs=dict()
+            if sys.version_info>(3,0):
+                kwargs={'encoding':"utf-8"}
+            fh=open(self.filename,**kwargs)
         except IOError:
             self.error_dialog.showMessage('Could not read the file')
         else:
@@ -164,7 +167,6 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
 
 if __name__=='__main__':
     #This is for testing purposes only
-    import sys
     app=QtWidgets.QApplication(sys.argv)
     mainForm=dataloader()
     mainForm.show()
