@@ -3,6 +3,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui, uic
 import numpy as np
 import os
 
+
 ui=os.path.join(os.path.dirname(__file__),'UI/dataloader.ui')
 Ui_dataloader, QtBaseClass = uic.loadUiType(ui)
 
@@ -106,7 +107,7 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
         self.endrow=2
         search_first_num=True
         try:
-            fh=open(self.filename)
+            fh=open(self.filename,encoding="utf-8")
         except IOError:
             self.error_dialog.showMessage('Could not read the file')
         else:
