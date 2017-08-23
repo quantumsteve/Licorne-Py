@@ -1,8 +1,10 @@
 from __future__ import (absolute_import, division, print_function)
 from PyQt5 import QtCore, QtWidgets, QtGui, uic
 import numpy as np
+import os
 
-Ui_dataloader, QtBaseClass = uic.loadUiType('UI/dataloader.ui')
+ui=os.path.join(os.path.dirname(__file__),'UI/dataloader.ui')
+Ui_dataloader, QtBaseClass = uic.loadUiType(ui)
 
 class dataloader(QtWidgets.QWidget,Ui_dataloader):
     dataSignal=QtCore.pyqtSignal(tuple)
@@ -42,9 +44,10 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
         self.disableOK()
 
     def debuginfo(self,content):
-        print("Data: {0} rows".format(content[0].shape[0]))
-        print("P_polarizer: ",content[1])
-        print("P_analyzer: ",content[2])
+        pass
+        #print("Data: {0} rows".format(content[0].shape[0]))
+        #print("P_polarizer: ",content[1])
+        #print("P_analyzer: ",content[2])
 
     def loadfile(self):
         if len(self.lineEdit_Filename.text().strip())==0:
@@ -59,6 +62,7 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*)", options=options)
         if fileName:
             self.filename=fileName
+            self.lineEdit_Filename.setText(self.filename)
             self.update_text()
 
     def readdata(self):
@@ -81,7 +85,7 @@ class dataloader(QtWidgets.QWidget,Ui_dataloader):
             self.disableOK()
             return
         self.enableOK()
-        self.data=data
+        self.data=data[:,[self.qcolumn,self.rcolumn,self.ecolumn]]
 
     def enableOK(self):
         self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(True)
