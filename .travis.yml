@@ -21,6 +21,7 @@ install:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
+  - conda config --append channels conda-forge
   - conda update -q conda
   # Useful for debugging any issues with conda
   - conda info -a
@@ -33,6 +34,11 @@ install:
     fi
   - source activate test-environment
   - python setup.py install
+
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 
 script:
   - python -m unittest discover tests
