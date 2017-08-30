@@ -77,16 +77,16 @@ class TestPlotLayerProperties(unittest.TestCase):
         #nsld_real plot
         pc=ax[0].get_children()[0]
         np.testing.assert_equal(pc.get_array(),corresponding)#colors are corresponding to the correct layer
-        self.assertEquals(ax[0].get_xlabel(),'Depth')
-        self.assertEquals(ax[0].get_ylabel(),'NSLD_REAL')
+        self.assertEqual(ax[0].get_xlabel(),'Depth')
+        self.assertEqual(ax[0].get_ylabel(),'NSLD_REAL')
         #sublayer nslds
         sl_height_plot=np.array([path.vertices[2][1] for path in pc.get_paths()])
         sl_height_input=np.array([sl.nsld_real.value for sl in sublayers])
         np.testing.assert_allclose(sl_height_plot,sl_height_input,atol=1e-12)
         #roughness plot
         np.testing.assert_allclose(ax[1].get_children()[0].get_offsets(),np.array([[.0,0],[90,8],[130,5],[205,4],[330,5]]),atol=1e-3)
-        self.assertEquals(ax[1].get_xlabel(),'Depth')
-        self.assertEquals(ax[1].get_ylabel(),'ROUGHNESS')
+        self.assertEqual(ax[1].get_xlabel(),'Depth')
+        self.assertEqual(ax[1].get_ylabel(),'ROUGHNESS')
         plt.close()
 
 if __name__ == '__main__':

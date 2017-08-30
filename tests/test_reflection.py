@@ -3,7 +3,6 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal
 import os
 import unittest
-from itertools import izip
 import matplotlib.pyplot as plt
 
 class Layer(object):
@@ -193,6 +192,80 @@ class Testr2_6_508(unittest.TestCase):
         plt.ylabel('Reflectivity')
         plt.title('Polarization ({},{},{}), Analysis({},{},{})'.format(pol_vecs[k][0],pol_vecs[k][1],pol_vecs[k][2],an_vecs[k][0],an_vecs[k][1],an_vecs[k][2]))
         plt.savefig('r2_6_508_'+str(k+1)+'.png')
+        plt.close()
+
+
+class resolution2:
+    def __init__(self):
+        self.DTheta1 = 0.0
+        self.DTheta2 = 0.0007
+        self.Q1 = 0.0
+        self.Lambda = 5.0
+        self.DLambda = 0.01
+
+    def SigmaQP1(self, Q):
+        Theta = np.arcsin(Q*self.Lambda/(4.0*np.pi));
+        return Q * np.sqrt(np.power(self.DTheta1 / Theta, 2) + np.power(self.DLambda / self.Lambda, 2))
+
+    def SigmaQP2(self, Q):
+        Theta = np.arcsin(Q*self.Lambda/(4.0*np.pi));
+        return Q * np.sqrt(np.power(self.DTheta2 / Theta, 2) + np.power(self.DLambda / self.Lambda, 2))
+
+    def Sigma(self, Q):
+        if(Q < self.Q1):
+            return self.SigmaQP1(Q)
+        else:
+            return self.SigmaQP2(Q)
+
+class Testhelix100(unittest.TestCase):
+    q = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/helix100/q.dat'),unpack=True)
+    inc_moment = q / 2.0
+
+    res = resolution2()
+    sigma = []
+    for value in q:
+        sigma.append(res.Sigma(value))
+    sigma = np.array(sigma)
+
+    substrate = complex(6.0e-6, 0.0)
+    layer_info = np.loadtxt(os.path.join(os.path.dirname(__file__), 'data/helix100/profile_sublayers.dat'))
+    layer_info = layer_info[0:-2]
+    layers = []
+    for line in layer_info:
+        l = Layer()
+        l.thickness = line[1] # fit improved by adding 0.05?
+        l.nsld = complex(line[2], line[3])
+        msld = [line[4], np.deg2rad(line[5]), np.deg2rad(line[6])]
+        l.msld = [msld[0]*np.sin(msld[2])*np.cos(msld[1]), msld[0]*np.sin(msld[2])*np.sin(msld[1]), msld[0]*np.cos(msld[2])]
+        l.NC = 0.0
+        layers.append(l)
+
+    R = reflection.reflection(inc_moment, layers, substrate)
+    pol_vecs = [[1,0,0],[-1,0,0],[-1,0,0],[0,0,0],[0,0,0],[0,0,0]]
+    an_vecs = [[1,0,0],[-1,0,0],[1,0,0],[0,0,0],[0,0,0],[0,0,0]]
+
+    norm_factor=[1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    background=1.e-06;
+
+    pol_eff = np.ones(len(q), dtype = np.complex128)
+    an_eff = np.ones(len(q), dtype = np.complex128)
+
+    n_of_outputs = 3
+    for k in range(n_of_outputs):
+        RR = reflection.spin_av(R, pol_vecs[k], an_vecs[k], pol_eff, an_eff)
+        RRr = reflection.resolut(RR, q, sigma, 3)
+        RRr = RRr * norm_factor[k] + background
+        fig,ax = plt.subplots()
+        ax.semilogy(q,RRr,label='calculation')
+        #plt.xlim([0.0,0.06])
+        #plt.ylim([1.0e-4,10.0])
+        reference_values = np.loadtxt(os.path.join(os.path.dirname(__file__),'data/helix100/rtheory'+str(k+1)+'.dat'), unpack=True)
+        ax.semilogy(q, reference_values, label='reference')
+        ax.set_xlabel('Momentum Transfer $\AA^{-1}$')
+        ax.set_ylabel('Reflectivity')
+        ax.set_title('Polarization ({},{},{}), Analysis({},{},{})'.format(pol_vecs[k][0],pol_vecs[k][1],pol_vecs[k][2],an_vecs[k][0],an_vecs[k][1],an_vecs[k][2]))
+        ax.legend()
+        fig.savefig('helix100_'+str(k+1)+'.png')
         plt.close()
 
 #if __name__ == '__main__':
