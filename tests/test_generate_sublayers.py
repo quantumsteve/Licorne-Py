@@ -126,6 +126,6 @@ class TestGenerateSublayers(unittest.TestCase):
         for t,p,l in zip(sl_msldt,sl_msldp,corresponding):
             self.assertAlmostEqual(t,layers[int(l)].msld.theta.value)
             self.assertAlmostEqual(p,layers[int(l)].msld.phi.value)
-        
+
 if __name__ == '__main__':
     unittest.main()

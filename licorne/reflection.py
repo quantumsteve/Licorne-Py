@@ -1,8 +1,5 @@
 from copy import deepcopy
 import numpy as np
-import warnings
-#np.seterr(all='warn')
-#warnings.filterwarnings('error')
 
 class Mat(object):
     def __init__(self, size):
@@ -361,7 +358,7 @@ def resolut2(RR, q, dq):
 def resolut3(RR, q, dq):
     N = len(q)
     Nm1 = N - 1
-    RRr = deepcopy(RR)
+    RRr = np.zeros(N)
     pi_s = np.sqrt(2.0 * np.pi)
     for i in range(2, Nm1 - 1):
         dqc = abs(q[i + 1] - q[i - 1]) / 2.0
