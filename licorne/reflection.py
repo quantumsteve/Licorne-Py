@@ -36,7 +36,7 @@ def s_sin(A, thickness, inc_moment2):
 def p_cos(A, B1, B2, B3, th, inc_moment2):
     Bmod = np.sqrt(np.square(B1) + np.square(B2) + np.square(B3))
     Out = Mat(len(inc_moment2))
-    if Bmod > 0.0:
+    if Bmod != 0.0:
         Arg_plus = A + Bmod
         Arg_minus = A - Bmod
         F_plus = (s_cos(Arg_plus, th, inc_moment2) + s_cos(Arg_minus, th, inc_moment2)) / 2.0
@@ -98,7 +98,7 @@ def s_invmoment(A, inc_moment2):
 def p_moment(A, B1, B2, B3, inc_moment2):
     Bmod = np.sqrt(np.square(B1) + np.square(B2) + np.square(B3))
     Out = Mat(len(inc_moment2))
-    if Bmod > 0.0:
+    if Bmod != 0.0:
         Arg_plus = A + Bmod
         Arg_minus = A - Bmod
         F_plus = (s_moment(Arg_plus, inc_moment2) + s_moment(Arg_minus, inc_moment2)) / 2.0
@@ -118,7 +118,7 @@ def p_moment(A, B1, B2, B3, inc_moment2):
 def p_invmoment(A, B1, B2, B3, inc_moment2):
     Bmod = np.sqrt(np.square(B1) + np.square(B2) + np.square(B3))
     Out = Mat(len(inc_moment2))
-    if Bmod > 0.0:
+    if Bmod != 0.0:
         Arg_plus = A + Bmod
         Arg_minus = A - Bmod
         F_plus = (s_invmoment(Arg_plus, inc_moment2) + s_invmoment(Arg_minus, inc_moment2)) / 2.0
@@ -363,7 +363,7 @@ def resolut3(RR, q, dq):
     for i in range(2, Nm1 - 1):
         dqc = abs(q[i + 1] - q[i - 1]) / 2.0
         if dq[i] < dqc / 2.0:
-            RRr[i] = RR[i].real
+            RRr[i] = RR[i]
         else:
             sigma_pi = dq[i] * pi_s
             sigma_sq = 2.0 * dq[i] * dq[i]

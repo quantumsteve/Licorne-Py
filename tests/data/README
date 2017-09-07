@@ -1,0 +1,6 @@
+refl*: example data included with licorne
+
+Chi3-137: the sample was measured with polarization analysis, so the data was measured for the three spin-states R++, R+- and R—, the fitting parameters were NSLD, MSLD, MSLD_fi
+ 
+r2_6_508: data and calculation for R++, R+- and R—, using NSLD, MSLD, MSLD_fi and ImSLD (not fitted, just fixed)
+

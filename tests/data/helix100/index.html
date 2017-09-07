@@ -1,0 +1,4083 @@
+<HTML>
+<HEAD>
+<TITLE>Licorne 1.0.0 output</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TOPMARGIN="5" TEXT="black">
+<CENTER>
+<H2>Licorne 1.0.0 report</H2>
+</CENTER>
+Description: <FONT face=Courier>Helix</FONT><br>
+Last saved/opened: <FONT face=Courier>D:\Oleg\Helix\helix100.zip</FONT><br>
+Formalism: <FONT face=Courier>Supermatrix</FONT><br>
+Properties profile:<br>
+<IMG SRC="profile1.png" width=600><br>
+<P>
+Reflectivity 1<br>
+<IMG SRC="reflectivity1.png" width=600></P>
+Normalization factor=<FONT face=Courier>1</FONT><br>
+<P>
+Reflectivity 2<br>
+<IMG SRC="reflectivity2.png" width=600></P>
+Normalization factor=<FONT face=Courier>1</FONT><br>
+<P>
+Reflectivity 3<br>
+<IMG SRC="reflectivity3.png" width=600></P>
+Normalization factor=<FONT face=Courier>1</FONT><br>
+Background=<FONT face=Courier>1e-006</FONT><br>
+TOF incidence angle=<FONT face=Courier>0.01 rad</FONT>; Maxwell width=<FONT face=Courier>3</FONT><br>
+Experimental data files:<br>
+<TABLE border=1>
+<tr>
+<td>File</td>
+<td>Source</td>
+<td>Min</td>
+<td>Max</td>
+<td>Flux</td>
+<td>Number<br>of points</td>
+<td>First<br>row</td>
+<td>Column<br>number</td>
+<td>Err column<br>number</td>
+</tr>
+<tr>
+<td>q.dat</td>
+<td><FONT size=-1>&ltgenerated&gt</FONT></td>
+<td>0.002</td>
+<td>0.17</td>
+<td></td>
+<td>150</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>rexp1.dat</td>
+<td><FONT size=-1>&ltgenerated&gt</FONT></td>
+<td>2.10032e-005</td>
+<td>0.995194</td>
+<td>100000000</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>rexp2.dat</td>
+<td><FONT size=-1>&ltgenerated&gt</FONT></td>
+<td>4.5002e-006</td>
+<td>0.996347</td>
+<td>100000000</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>rexp3.dat</td>
+<td><FONT size=-1>&ltgenerated&gt</FONT></td>
+<td>0</td>
+<td>0.284563</td>
+<td>100000000</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</TABLE>
+Date of experiment: <FONT face=Courier>02-Nov-2008</FONT><br>
+Resolution:<br>
+<FONT face=Courier size=-1>
+&nbsp;&nbsp;Lambda=5;<br>
+&nbsp;&nbsp;DLambda=0.01;<br>
+&nbsp;&nbsp;Theta=asin(Q*Lambda/(4*pi));<br>
+&nbsp;&nbsp;DTheta=Q*0;<br>
+&nbsp;&nbsp;DTheta(Q>0)=0.0007;<br>
+&nbsp;&nbsp;Sigma=Q.*sqrt((DTheta./Theta).^2+(DLambda/Lambda)^2);<br>
+</FONT>
+Script1 (script is not executed during the fit):<br>
+<FONT face=Courier size=-1>
+&nbsp;&nbsp;N=100; % Number of layers<br>
+&nbsp;&nbsp;if p1>0.01<br>
+&nbsp;&nbsp;% Hyperbolic tangent<br>
+&nbsp;&nbsp;for k=1:N<br>
+&nbsp;&nbsp;  M.Layers(k).msld(2)=(180/tanh(p1*(N-1)/(2*(N+1))))*tanh(p1*(k-(N+1)/2)/(N+1))/2+90;<br>
+&nbsp;&nbsp;end<br>
+&nbsp;&nbsp;elseif (p1<=0.01)&(p1>=-0.01)<br>
+&nbsp;&nbsp;% Linear<br>
+&nbsp;&nbsp;for k=1:N<br>
+&nbsp;&nbsp;M.Layers(k).msld(2)=180*(k-1)/(N-1);<br>
+&nbsp;&nbsp;end<br>
+&nbsp;&nbsp;else<br>
+&nbsp;&nbsp;% Hyperbolic arctangent<br>
+&nbsp;&nbsp;x1=tanh(p1/2)/2+0.5; x2=tanh(-p1/2)/2+0.5;<br>
+&nbsp;&nbsp;for k=1:N<br>
+&nbsp;&nbsp;  M.Layers(k).msld(2)=(-180/(p1/2))*atanh(2*(x1+(k-1)*(x2-x1)/(N-1))-1)/2+90;<br>
+&nbsp;&nbsp;end<br>
+&nbsp;&nbsp;end<br>
+</FONT>
+Script2 (script is not executed during the fit):<br>
+<FONT face=Courier size=-1>
+&nbsp;&nbsp;N=100; % Number of layers<br>
+&nbsp;&nbsp;if p1>0.01<br>
+&nbsp;&nbsp;% Hyperbolic tangent<br>
+&nbsp;&nbsp;pN=p1*(N-1)/(2*(N+1));<br>
+&nbsp;&nbsp;for k=1:N<br>
+&nbsp;&nbsp;  M.Layers(k).msld(2)=180*(tanh(p2+p1*(k-(N+1)/2)/(N+1))-tanh(p2-pN))/(tanh(pN+p2)-tanh(p2-pN));<br>
+&nbsp;&nbsp;end<br>
+&nbsp;&nbsp;elseif (p1<=0.01)&(p1>=-0.01)<br>
+&nbsp;&nbsp;% Linear<br>
+&nbsp;&nbsp;for k=1:N<br>
+&nbsp;&nbsp;M.Layers(k).msld(2)=180*(k-1)/(N-1);<br>
+&nbsp;&nbsp;end<br>
+&nbsp;&nbsp;else<br>
+&nbsp;&nbsp;% Hyperbolic arctangent<br>
+&nbsp;&nbsp;x1=tanh(p1/2-p2)/2+0.5; x2=tanh(-p1/2-p2)/2+0.5;<br>
+&nbsp;&nbsp;for k=1:N<br>
+&nbsp;&nbsp;  M.Layers(k).msld(2)=(-180/(p1/2))*(atanh(2*(x1+(k-1)*(x2-x1)/(N-1))-1)+p2)/2+90;<br>
+&nbsp;&nbsp;end<br>
+&nbsp;&nbsp;end<br>
+</FONT>
+Script3 (script is not executed during the fit):<br>
+<FONT face=Courier size=-1>
+&nbsp;&nbsp;N=100;<br>
+&nbsp;&nbsp;for k=1:N<br>
+&nbsp;&nbsp;M.Layers(k).msld(2)=180*(k-1)/(N-1);<br>
+&nbsp;&nbsp;end<br>
+</FONT>
+Script parameters:<br>
+<TABLE border=1>
+<tr>
+<td>Parameter</td>
+<td>Value</td>
+<td>Fit</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr>
+<td>p1</td>
+<td>2</td>
+<td>0</td>
+<td>-4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>p2</td>
+<td>-2</td>
+<td>0</td>
+<td>-4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>p3</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p4</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p5</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p6</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p7</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p8</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p9</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p10</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p11</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p12</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p13</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p14</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p15</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p16</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p17</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p18</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p19</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td>p20</td>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>10</td>
+</tr>
+</TABLE>
+Model parameters are fitted.<br>
+Substrate:<br>
+<TABLE border=1>
+<tr>
+<td colspan=2>NSLD</td>
+<td colspan=2>Im NSLD</td>
+<td colspan=2>Roughness</td>
+<td rowspan=2>Rgh<br>fun</td>
+</tr>
+<tr>
+<td rowspan=2>Fit</td>
+<td>min</td>
+<td rowspan=2>Fit</td>
+<td>min</td>
+<td rowspan=2>Fit</td>
+<td>min</td>
+</tr>
+<tr>
+<td>max</td>
+<td>max</td>
+<td>max</td>
+<td>Nsubl</td>
+</tr>
+<tr>
+<td colspan=2><FONT size=-1>6e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+</TABLE>
+Layers parameters table:<br>
+<TABLE border=1>
+<tr>
+<td rowspan=3>N</td>
+<td colspan=2>Thickness</td>
+<td colspan=2>NSLD</td>
+<td colspan=2>Im NSLD</td>
+<td colspan=2>MSLD<br>rho</td>
+<td colspan=2>MSLD<br>phi</td>
+<td colspan=2>MSLD<br>theta</td>
+<td colspan=2>Roughness</td>
+<td rowspan=2>Rgh<br>fun</td>
+</tr>
+<tr>
+<td rowspan=2>Fit</td>
+<td>min</td>
+<td rowspan=2>Fit</td>
+<td>min</td>
+<td rowspan=2>Fit</td>
+<td>min</td>
+<td rowspan=2>Fit</td>
+<td>min</td>
+<td rowspan=2>Fit</td>
+<td>min</td>
+<td rowspan=2>Fit</td>
+<td>min</td>
+<td rowspan=2>Fit</td>
+<td>min</td>
+</tr>
+<tr>
+<td>max</td>
+<td>max</td>
+<td>max</td>
+<td>max</td>
+<td>max</td>
+<td>max</td>
+<td>max</td>
+<td>Nsubl</td>
+</tr>
+<tr>
+<td rowspan=3>1</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>2</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>0.16577</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>3</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>0.3382</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>4</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>0.51755</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>5</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>0.70411</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>6</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>0.89816</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>7</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>1.1</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>8</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>1.3099</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>9</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>1.5283</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>10</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>1.7554</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>11</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>1.9916</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>12</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>2.2373</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>13</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>2.4929</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>14</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>2.7586</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>15</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>3.0351</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>16</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>3.3226</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>17</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>3.6215</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>18</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>3.9325</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>19</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>4.2559</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>20</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>4.5922</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>21</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>4.9419</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>22</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>5.3056</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>23</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>5.6838</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>24</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>6.0771</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>25</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>6.4861</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>26</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>6.9114</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>27</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>7.3537</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>28</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>7.8135</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>29</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>8.2916</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>30</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>8.7888</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>31</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>9.3057</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>32</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>9.8431</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>33</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>10.4018</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>34</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>10.9827</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>35</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>11.5866</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>36</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>12.2145</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>37</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>12.8671</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>38</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>13.5456</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>39</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>14.2508</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>40</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>14.9839</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>41</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>15.7459</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>42</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>16.5378</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>43</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>17.3609</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>44</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>18.2164</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>45</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>19.1054</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>46</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>20.0293</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>47</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>20.9894</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>48</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>21.987</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>49</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>23.0236</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>50</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>24.1006</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>51</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>25.2195</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>52</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>26.382</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>53</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>27.5895</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>54</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>28.844</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>55</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>30.1469</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>56</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>31.5002</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>57</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>32.9057</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>58</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>34.3653</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>59</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>35.8809</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>60</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>37.4547</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>61</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>39.0886</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>62</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>40.785</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>63</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>42.5459</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>64</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>44.3738</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>65</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>46.271</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>66</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>48.2398</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>67</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>50.283</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>68</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>52.4029</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>69</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>54.6023</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>70</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>56.8839</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>71</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>59.2505</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>72</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>61.705</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>73</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>64.2504</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>74</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>66.8896</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>75</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>69.6259</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>76</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>72.4623</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>77</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>75.402</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>78</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>78.4486</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>79</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>81.6053</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>80</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>84.8756</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>81</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>88.263</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>82</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>91.7712</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>83</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>95.4038</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>84</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>99.1647</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>85</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>103.0574</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>86</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>107.086</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>87</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>111.2543</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>88</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>115.5663</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>89</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>120.026</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>90</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>124.6375</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>91</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>129.4047</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>92</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>134.3318</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>93</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>139.4229</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>94</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>144.6822</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>95</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>150.1137</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>96</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>155.7217</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>97</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>161.5103</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>98</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>167.4835</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>99</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>173.6454</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+<tr>
+<td rowspan=3>100</td>
+<td colspan=2><FONT size=-1>4</FONT></td>
+<td colspan=2><FONT size=-1>8e-006</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td colspan=2><FONT size=-1>5e-006</FONT></td>
+<td colspan=2><FONT size=-1>180</FONT></td>
+<td colspan=2><FONT size=-1>90</FONT></td>
+<td colspan=2><FONT size=-1>0</FONT></td>
+<td rowspan=2><FONT size=-1>none</FONT></td>
+</tr>
+<tr>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>10</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-9e-006</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-1e-009</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>-180</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td rowspan=2><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+</tr>
+<tr>
+<td><FONT size=-2>500</FONT></td>
+<td><FONT size=-2>9e-006</FONT></td>
+<td><FONT size=-2>0</FONT></td>
+<td><FONT size=-2>5e-006</FONT></td>
+<td><FONT size=-2>180</FONT></td>
+<td><FONT size=-2>90</FONT></td>
+<td><FONT size=-2>50</FONT></td>
+<td><FONT size=-1>6</FONT></td>
+</tr>
+</TABLE>
+Fraction = <FONT face=Courier>100%</FONT>; Fit = <FONT face=Courier>0</FONT>; Min = <FONT face=Courier>10%</FONT>; Max = <FONT face=Courier>100%</FONT><br>
+</TABLE>
+</BODY>
+</HTML>
