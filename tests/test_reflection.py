@@ -253,7 +253,7 @@ class Testhelix100(unittest.TestCase):
     an_vecs = [[1,0,0],[-1,0,0],[1,0,0],[0,0,0],[0,0,0],[0,0,0]]
 
     norm_factor=[1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-    background=1.e-06;
+    background=1.e-06
 
     pol_eff = np.ones(len(q), dtype = np.complex128)
     an_eff = np.ones(len(q), dtype = np.complex128)
@@ -276,6 +276,6 @@ class Testhelix100(unittest.TestCase):
         fig.savefig('helix100_'+str(k+1)+'.pdf')
         plt.close()
 
-#if __name__ == '__main__':
-#    unittest.main()
+if __name__ == '__main__':
+    unittest.main()
 
