@@ -361,12 +361,12 @@ def resolut2(RR, q, dq):
 def resolut3(RR, q, dq):
     N = len(q)
     Nm1 = N - 1
-    RRr = np.zeros(N)
+    RRr = deepcopy(RR)
     pi_s = np.sqrt(2.0 * np.pi)
     for i in range(2, Nm1 - 1):
         dqc = abs(q[i + 1] - q[i - 1]) / 2.0
         if dq[i] < dqc / 2.0:
-            RRr[i] = RR[i].real
+            RRr[i] = RR[i]
         else:
             sigma_pi = dq[i] * pi_s
             sigma_sq = 2.0 * dq[i] * dq[i]
